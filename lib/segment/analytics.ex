@@ -2,6 +2,8 @@ defmodule Segment.Analytics do
   alias Segment.Analytics.Context
   alias Segment.Analytics.Http
 
+  require Logger
+
   def track(t = %Segment.Analytics.Track{}) do
     call("track", t)
   end
@@ -73,7 +75,22 @@ defmodule Segment.Analytics do
     |> page
   end
 
-  defp call(method, body) do
-    Http.post(method, [body: Poison.encode!(body), stream_to: self])
+  defp call(function, params) do
+    Task.async(fn -> post_to_segment(function, Poison.encode!(params)) end)
+  end
+
+  defp post_to_segment(function, body) do
+    response = Http.post(function, [body: body]) |> log_result(function, body)
+  end
+
+  defp log_result(%{status_code: code}, function, body) when code in 200..299 do
+    #success
+    Logger.debug("Segment #{function} call success: #{code} with body: #{body}")
+
+  end
+
+  defp log_result(%{status_code: code}, function, body) do
+    #every other failure
+    Logger.debug("Segment #{function} call failed: #{code} with body: #{body}")
   end
 end
