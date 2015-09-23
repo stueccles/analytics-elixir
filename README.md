@@ -1,4 +1,93 @@
-AnalyticsElixir
-===============
+analytics-elixir
+================
 
-** TODO: Add description **
+analytics-elixir is a non-supported third-party client for [Segment](https://segment.com)
+
+## Install
+
+Add the following to deps section of your mix.exs: `{:analytics-elixir, github: "stueccles/analytics-elixir"}`
+
+and then `mix deps.get`
+
+## Usage
+
+Start the Segment agent with your write_key from Segment
+```
+Segment.start_link("YOUR_WRITE_KEY")
+```
+There are then two ways to call the different methods on the API.
+A basic way through `Segment.Analytics` or by passing a full Struct
+with all the data for the API (allowing Context and Integrations to be set)
+
+### Track
+```
+Segment.Analytics.track(user_id, event, %{property1: "", property2: ""})
+```
+or the full way using a struct with all the possible options for the track call
+```
+%Segment.Analytics.Track{ userId: "sdsds",
+                          event: "eventname",
+                          properties: %{property1: "", property2: ""}
+                        }
+  |> Segment.Analytics.track
+```
+
+### Identify
+```
+Segment.Analytics.identify(user_id, %{trait1: "", trait2: ""})
+```
+or the full way using a struct with all the possible options for the identify call
+```
+%Segment.Analytics.Identify{ userId: "sdsds",
+                             traits: %{trait1: "", trait2: ""}
+                           }
+  |> Segment.Analytics.identify
+```
+
+### Screen
+```
+Segment.Analytics.screen(user_id, name)
+```
+or the full way using a struct with all the possible options for the screen call
+```
+%Segment.Analytics.Screen{ userId: "sdsds",
+                           name: "dssd"
+                         }
+  |> Segment.Analytics.screen
+```
+
+### Alias
+```
+Segment.Analytics.alias(user_id, previous_id)
+```
+or the full way using a struct with all the possible options for the alias call
+```
+%Segment.Analytics.Alias{ userId: "sdsds",
+                          previousId: "dssd"
+                         }
+  |> Segment.Analytics.alias
+```
+
+### Group
+```
+Segment.Analytics.group(user_id, group_id)
+```
+or the full way using a struct with all the possible options for the group call
+```
+%Segment.Analytics.Group{ userId: "sdsds",
+                          groupId: "dssd"
+                         }
+  |> Segment.Analytics.group
+```
+
+### Page
+```
+Segment.Analytics.page(user_id, name)
+```
+or the full way using a struct with all the possible options for the page call
+```
+%Segment.Analytics.Page{ userId: "sdsds",
+                         name:   "dssd"
+                       }
+  |> Segment.Analytics.page
+```
