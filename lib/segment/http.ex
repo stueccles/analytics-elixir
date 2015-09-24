@@ -1,7 +1,7 @@
 defmodule Segment.Analytics.Http do
   use HTTPotion.Base
 
-  @base_url Application.get_env(:segment, :base_url)
+  @base_url "https://api.segment.io/v1/"
 
   def process_url(url) do
       @base_url <> url

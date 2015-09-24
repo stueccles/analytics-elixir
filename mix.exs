@@ -39,7 +39,7 @@ defmodule AnalyticsElixir.Mixfile do
       files: ["lib", "mix.exs", "README*", "readme*", "LICENSE*", "license*"],
       contributors: ["Stuart Eccles"],
       licenses: ["MIT"],
-      links: %{ "GitHub" => "https://github.com/bryanjos/keenex" }
+      links: %{ "GitHub" => "https://github.com/stueccles/analytics-elixir" }
     ]
   end
 end
