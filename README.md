@@ -5,7 +5,7 @@ analytics-elixir is a non-supported third-party client for [Segment](https://seg
 
 ## Install
 
-Add the following to deps section of your mix.exs: `{:analytics-elixir, github: "stueccles/analytics-elixir"}`
+Add the following to deps section of your mix.exs: `{:segment, github: "stueccles/analytics-elixir"}`
 
 and then `mix deps.get`
 
@@ -18,6 +18,33 @@ Segment.start_link("YOUR_WRITE_KEY")
 There are then two ways to call the different methods on the API.
 A basic way through `Segment.Analytics` or by passing a full Struct
 with all the data for the API (allowing Context and Integrations to be set)
+
+## Usage in Phoenix
+
+This is how I add to a Phoenix project (may not be your preffered way)
+
+1. Add the following to deps section of your mix.exs: `{:segment, github: "stueccles/analytics-elixir"}`
+   and then `mix deps.get`
+2. Add segment to applications list in the Phoenix project mix.exs
+ie.
+```
+def application do
+  [mod: {FormAndThread, []},
+   applications: [:phoenix, :phoenix_html, :cowboy, :logger,
+                  :phoenix_ecto, :postgrex, :segment]]
+end
+```
+3. Add a config variable for your write_key (may want to make this environment dependent)
+ie.
+```
+config :segment,
+  write_key: "2iFFnRsCfi"
+```
+4. Start the segment agent as a child of the application in the application file under
+the lib directory. In the children list add:
+```
+worker(Segment, [Application.get_env(:segment, :write_key)])
+```
 
 ### Track
 ```
@@ -90,4 +117,12 @@ or the full way using a struct with all the possible options for the page call
                          name:   "dssd"
                        }
   |> Segment.Analytics.page
+```
+
+## Running tests
+
+There are not many tests at the moment. But you can run a live test on your segment
+account by running.
+```
+SEGMENT_KEY=yourkey mix test
 ```
