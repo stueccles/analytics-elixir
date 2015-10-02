@@ -80,13 +80,12 @@ defmodule Segment.Analytics do
   end
 
   defp post_to_segment(function, body) do
-    response = Http.post(function, [body: body]) |> log_result(function, body)
+    Http.post(function, [body: body]) |> log_result(function, body)
   end
 
   defp log_result(%{status_code: code}, function, body) when code in 200..299 do
     #success
     Logger.debug("Segment #{function} call success: #{code} with body: #{body}")
-
   end
 
   defp log_result(%{status_code: code}, function, body) do
