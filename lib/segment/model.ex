@@ -8,8 +8,10 @@ defmodule Segment.Analytics.Track do
               :context,
               :timestamp,
               :integrations,
-              :anonymousId
+              :anonymousId,
+              method: @method
             ]
+
 end
 
 defmodule Segment.Analytics.Identify do
@@ -21,9 +23,9 @@ defmodule Segment.Analytics.Identify do
               :context,
               :timestamp,
               :integrations,
-              :anonymousId
+              :anonymousId,
+              method: @method
             ]
-
 end
 
 defmodule Segment.Analytics.Alias do
@@ -34,7 +36,8 @@ defmodule Segment.Analytics.Alias do
               :previousId,
               :context,
               :timestamp,
-              :integrations
+              :integrations,
+              method: @method
             ]
 
 end
@@ -49,7 +52,8 @@ defmodule Segment.Analytics.Page do
               :context,
               :timestamp,
               :integrations,
-              :anonymousId]
+              :anonymousId,
+              method: @method]
 
 end
 
@@ -63,7 +67,8 @@ defmodule Segment.Analytics.Screen do
               :context,
               :timestamp,
               :integrations,
-              :anonymousId
+              :anonymousId,
+              method: @method
             ]
 end
 
@@ -77,7 +82,8 @@ defmodule Segment.Analytics.Group do
               :context,
               :timestamp,
               :integrations,
-              :anonymousId
+              :anonymousId,
+              method: @method
             ]
 end
 
@@ -103,12 +109,12 @@ defmodule Segment.Analytics.Context do
               :userAgent
             ]
 
-    def update(context = %Segment.Analytics.Context{}) do
+    def update(context = %__MODULE__{}) do
       %{context | library: %{name: @library_name, version: @library_version}}
     end
 
     def new do
-      update(%Segment.Analytics.Context{})
+      update(%__MODULE__{})
     end
 
 end
