@@ -21,7 +21,7 @@ with all the data for the API (allowing Context and Integrations to be set)
 
 ## Usage in Phoenix
 
-This is how I add to a Phoenix project (may not be your preffered way)
+This is how I add to a Phoenix project (may not be your preferred way)
 
 1. Add the following to deps section of your mix.exs: `{:segment, github: "stueccles/analytics-elixir"}`
    and then `mix deps.get`
