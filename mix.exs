@@ -29,8 +29,8 @@ defmodule AnalyticsElixir.Mixfile do
   defp deps do
     [
       {:ibrowse, github: "cmullaparthi/ibrowse"},
-      {:httpotion, "~> 2.1.0"},
-      {:poison, "~> 1.3.1"}
+      {:httpotion, "~> 2.1"},
+      {:poison, "~> 1.3"}
     ]
   end
 
