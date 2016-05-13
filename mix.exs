@@ -14,7 +14,7 @@ defmodule AnalyticsElixir.Mixfile do
   #
   # Type `mix help compile.app` for more information
   def application do
-    [applications: [:httpotion, :logger, :poison]]
+    [applications: [:httpoison, :logger, :poison]]
   end
 
   # Dependencies can be Hex packages:
@@ -28,8 +28,7 @@ defmodule AnalyticsElixir.Mixfile do
   # Type `mix help deps` for more examples and options
   defp deps do
     [
-      {:ibrowse, github: "cmullaparthi/ibrowse"},
-      {:httpotion, "~> 2.1"},
+      {:httpoison, "~> 0.8.0"},
       {:poison, "~> 1.3"}
     ]
   end
