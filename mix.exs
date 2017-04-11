@@ -2,12 +2,14 @@ defmodule AnalyticsElixir.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :segment,
-     version: "0.1.1",
-     elixir: "~> 1.0",
-     deps: deps,
-     description: "analytics_elixir",
-     package: package]
+    [
+      app: :segment,
+      version: "0.1.1",
+      elixir: "~> 1.0",
+      deps: deps(),
+      description: "analytics_elixir",
+      package: package(),
+    ]
   end
 
   # Configuration for the OTP application
