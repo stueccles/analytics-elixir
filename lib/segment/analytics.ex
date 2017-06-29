@@ -80,7 +80,7 @@ defmodule Segment.Analytics do
 
   defp post_to_segment(function, body) do
     Http.post(function, body)
-      |> log_result(function, body)
+    |> log_result(function, body)
   end
 
   defp log_result({_, %{status_code: code}}, function, body) when code in 200..299 do
