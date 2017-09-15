@@ -89,7 +89,12 @@ defmodule Segment.Analytics do
   end
 
   defp log_result({_, %{status_code: code}}, function, body) do
-    #every other failure
+    #HTTP failure
     Logger.debug("Segment #{function} call failed: #{code} with body: #{body}")
+  end
+
+  defp log_result(error, function, body) do
+    #every other failure
+    Logger.debug("Segment #{function} call failed: #{error} with body: #{body}")
   end
 end
