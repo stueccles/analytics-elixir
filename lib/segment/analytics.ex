@@ -95,6 +95,6 @@ defmodule Segment.Analytics do
 
   defp log_result(error, function, body) do
     #every other failure
-    Logger.debug("Segment #{function} call failed: #{error} with body: #{body}")
+    Logger.debug("Segment #{function} call failed: #{inspect(error)} with body: #{body}")
   end
 end
