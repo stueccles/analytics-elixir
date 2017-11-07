@@ -8,7 +8,7 @@ defmodule Segment.Http do
   end
 
   def process_request_options(options) do
-    Keyword.put(options, :basic_auth, {write_key(), ""})
+    Keyword.merge(options, [hackney: [basic_auth: {write_key(), ""}]])
   end
 
   def process_request_headers(headers) do

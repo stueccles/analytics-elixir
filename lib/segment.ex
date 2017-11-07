@@ -64,32 +64,38 @@ defmodule Segment do
   end
 
   def handle_cast(%Track{} = t, state) do
-    Http.post!(t.method, Poison.encode!(t))
+    resp = Http.post!(t.method, Poison.encode!(t))
+    Logger.debug fn -> "#{inspect resp}" end
     {:noreply, state}
   end
 
   def handle_cast(%Identify{} = i, state) do
-    Http.post!(i.method, Poison.encode!(i))
+    resp = Http.post!(i.method, Poison.encode!(i))
+    Logger.debug fn -> "#{inspect resp}" end
     {:noreply, state}
   end
 
   def handle_cast(%Screen{} = s, state) do
-    Http.post!(s.method, Poison.encode!(s))
+    resp = Http.post!(s.method, Poison.encode!(s))
+    Logger.debug fn -> "#{inspect resp}" end
     {:noreply, state}
   end
 
   def handle_cast(%Alias{} = a, state) do
-    Http.post!(a.method, Poison.encode!(a))
+    resp = Http.post!(a.method, Poison.encode!(a))
+    Logger.debug fn -> "#{inspect resp}" end
     {:noreply, state}
   end
 
   def handle_cast(%Group{} = g, state) do
-    Http.post!(g.method, Poison.encode!(g))
+    resp = Http.post!(g.method, Poison.encode!(g))
+    Logger.debug fn -> "#{inspect resp}" end
     {:noreply, state}
   end
 
   def handle_cast(%Page{} = p, state) do
-    Http.post!(p.method, Poison.encode!(p))
+    resp = Http.post!(p.method, Poison.encode!(p))
+    Logger.debug fn -> "#{inspect resp}" end
     {:noreply, state}
   end
 end
