@@ -8,12 +8,16 @@ defmodule Segment.Analytics.Http do
   end
 
   def process_request_options(options) do
-    Keyword.put(options, :basic_auth, {Segment.write_key(), ""})
+    Keyword.put(options, :basic_auth, {write_key(), ""})
   end
 
   def process_request_headers(headers) do
     headers
     |> Keyword.put(:"Content-Type", "application/json")
     |> Keyword.put(:accept, "application/json")
+  end
+
+  defp write_key() do
+    Application.fetch_env!(:segment, :write_key)
   end
 end
