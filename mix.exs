@@ -33,10 +33,10 @@ defmodule AnalyticsElixir.Mixfile do
   # Type `mix help deps` for more examples and options
   defp deps do
     [
-      {:httpoison, "~> 0.8"},
-      {:poison, "~> 1.3 or ~> 2.0"},
+      {:httpoison, "~> 0.13"},
+      {:poison, "~> 3.1"},
       {:ex_doc, ">= 0.0.0", only: :dev},
-      {:exvcr, "~> 0.9", only: :test}
+      {:exvcr, "~> 0.9", only: :test},
     ]
   end
 
