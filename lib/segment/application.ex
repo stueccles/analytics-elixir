@@ -5,7 +5,7 @@ defmodule Segment.Application do
     import Supervisor.Spec, warn: false
 
     children = [
-      {Segment.Worker, []}
+      {Segment, []}
     ]
 
     opts = [strategy: :one_for_one, name: Segment.Supervisor]

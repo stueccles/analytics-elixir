@@ -4,8 +4,8 @@ defmodule AnalyticsElixir.Mixfile do
   def project do
     [
       app: :segment,
-      version: "0.1.1",
-      elixir: "~> 1.0",
+      version: "1.0.0",
+      elixir: "~> 1.5",
       deps: deps(),
       description: "analytics_elixir",
       package: package(),
@@ -19,18 +19,12 @@ defmodule AnalyticsElixir.Mixfile do
   #
   # Type `mix help compile.app` for more information
   def application do
-    [applications: [:httpoison, :logger, :poison]]
+    [
+      mod: {Segment.Application, []},
+      extra_applications: [:logger],
+    ]
   end
 
-  # Dependencies can be Hex packages:
-  #
-  #   {:mydep, "~> 0.3.0"}
-  #
-  # Or git/path repositories:
-  #
-  #   {:mydep, git: "https://github.com/elixir-lang/mydep.git", tag: "0.1.0"}
-  #
-  # Type `mix help deps` for more examples and options
   defp deps do
     [
       {:httpoison, "~> 0.13"},
@@ -41,11 +35,11 @@ defmodule AnalyticsElixir.Mixfile do
   end
 
   defp package do
-    [ # These are the default files included in the package
+    [
       files: ["lib", "mix.exs", "README*", "LICENSE*"],
-      maintainers: ["Stuart Eccles"],
+      maintainers: ["Luke Swithenbank"],
       licenses: ["MIT"],
-      links: %{ "GitHub" => "https://github.com/stueccles/analytics-elixir" }
+      links: %{ "GitHub" => "https://github.com/lswith/analytics-elixir" }
     ]
   end
 end

@@ -1,80 +1,95 @@
 defmodule Segment do
+  use GenServer
   alias Segment.Analytics.Http
   alias Segment.{Track, Identify, Screen, Alias, Group, Page, Context}
 
   require Logger
-  @type status :: :ok | :error
 
-  def track(t = %Track{}) do
-    call(t)
+  def start_link(args) do
+    GenServer.start_link(__MODULE__, args)
   end
 
-  def track(user_id, event, properties \\ %{}, context \\ Context.new()) do
-    %Track{userId: user_id, event: event, properties: properties, context: context}
-    |> call
+  def send_track(t = %Track{}) do
+    GenServer.cast(__MODULE__, t)
   end
 
-  def identify(i = %Identify{}) do
-    call(i)
+  def send_track(user_id, event, properties \\ %{}, context \\ Context.new()) do
+    t = %Track{userId: user_id, event: event, properties: properties, context: context}
+    send_track(t)
   end
 
-  def identify(user_id, traits \\ %{}, context \\ Context.new()) do
-    %Identify{userId: user_id, traits: traits, context: context}
-    |> call
+  def send_identify(i = %Identify{}) do
+    GenServer.cast(__MODULE__, i)
   end
 
-  def screen(s = %Screen{}) do
-    call(s)
+  def send_identify(user_id, traits \\ %{}, context \\ Context.new()) do
+    i = %Identify{userId: user_id, traits: traits, context: context}
+    send_identify(i)
   end
 
-  def screen(user_id, name \\ "", properties \\ %{}, context \\ Context.new()) do
-    %Screen{userId: user_id, name: name, properties: properties, context: context}
-    |> call
+  def send_screen(s = %Screen{}) do
+    GenServer.cast(__MODULE__, s)
   end
 
-  def alias(a = %Alias{}) do
-    call(a)
+  def send_screen(user_id, name \\ "", properties \\ %{}, context \\ Context.new()) do
+    s = %Screen{userId: user_id, name: name, properties: properties, context: context}
+    send_screen(s)
   end
 
-  def alias(user_id, previous_id, context \\ Context.new()) do
-    %Alias{userId: user_id, previousId: previous_id, context: context}
-    |> call
+  def send_alias(a = %Alias{}) do
+    GenServer.cast(__MODULE__, a)
   end
 
-  def group(g = %Group{}) do
-    call(g)
+  def send_alias(user_id, previous_id, context \\ Context.new()) do
+    a = %Alias{userId: user_id, previousId: previous_id, context: context}
+    send_alias(a)
   end
 
-  def group(user_id, group_id, traits \\ %{}, context \\ Context.new()) do
-    %Group{userId: user_id, groupId: group_id, traits: traits, context: context}
-    |> call
+  def send_group(g = %Group{}) do
+    GenServer.cast(__MODULE__, g)
   end
 
-  def page(p = %Page{}) do
-    call(p)
+  def send_group(user_id, group_id, traits \\ %{}, context \\ Context.new()) do
+    g = %Group{userId: user_id, groupId: group_id, traits: traits, context: context}
+    send_group(g)
   end
 
-  def page(user_id, name \\ "", properties \\ %{}, context \\ Context.new()) do
-    %Page{userId: user_id, name: name, properties: properties, context: context}
-    |> call
+  def send_page(p = %Page{}) do
+    GenServer.cast(__MODULE__, p)
   end
 
-  defp call(api) do
-    Task.async(fn -> post_to_segment(api.method, Poison.encode!(api)) end)
+  def send_page(user_id, name \\ "", properties \\ %{}, context \\ Context.new()) do
+    p = %Page{userId: user_id, name: name, properties: properties, context: context}
+    send_page(p)
   end
 
-  defp post_to_segment(function, body) do
-    Http.post(function, body)
-    |> log_result(function, body)
+  def handle_cast(%Track{} = t, state) do
+    Http.post!(t.method, Poison.encode!(t))
+    {:noreply, state}
   end
 
-  defp log_result({_, %{status_code: code}}, function, body) when code in 200..299 do
-    # success
-    Logger.debug("Segment #{function} call success: #{code} with body: #{body}")
+  def handle_cast(%Identify{} = i, state) do
+    Http.post!(i.method, Poison.encode!(i))
+    {:noreply, state}
   end
 
-  defp log_result({_, %{status_code: code}}, function, body) do
-    # every other failure
-    Logger.debug("Segment #{function} call failed: #{code} with body: #{body}")
+  def handle_cast(%Screen{} = s, state) do
+    Http.post!(s.method, Poison.encode!(s))
+    {:noreply, state}
+  end
+
+  def handle_cast(%Alias{} = a, state) do
+    Http.post!(a.method, Poison.encode!(a))
+    {:noreply, state}
+  end
+
+  def handle_cast(%Group{} = g, state) do
+    Http.post!(g.method, Poison.encode!(g))
+    {:noreply, state}
+  end
+
+  def handle_cast(%Page{} = p, state) do
+    Http.post!(p.method, Poison.encode!(p))
+    {:noreply, state}
   end
 end
