@@ -5,10 +5,8 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.14.3">
-    <title>Segment – segment v0.1.1</title>
+    <title>Segment – segment v1.0.0</title>
     <link rel="stylesheet" href="dist/app-091c05798a.css" />
-    
-      <link rel="canonical" href="https://hexdocs.pm/segment/Segment.html" />
     
     <script src="dist/sidebar_items.js"></script>
   </head>
@@ -28,7 +26,7 @@
         segment
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.1.1
+        v1.0.0
       </h2>
     </div>
     
@@ -60,7 +58,7 @@
 
 
       <h1>
-        <small class="visible-xs">segment v0.1.1</small>
+        <small class="visible-xs">segment v1.0.0</small>
         Segment
         
         
@@ -77,19 +75,6 @@
             Summary
           </h1>
           
-  <div class="summary-types summary">
-    <h2>
-      <a href="#types">Types</a>
-    </h2>
-    <div class="summary-row">
-  <div class="summary-signature">
-    <a href="#t:status/0">status()</a>
-  </div>
-  
-</div>
-
-  </div>
-
 
           
   <div class="summary-functions summary">
@@ -98,13 +83,79 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#start_link/1">start_link(write_key)</a>
+    <a href="#send_alias/1">send_alias(a)</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#write_key/0">write_key()</a>
+    <a href="#send_alias/3">send_alias(user_id, previous_id, context \\ Context.new())</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#send_group/1">send_group(g)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#send_group/4">send_group(user_id, group_id, traits \\ %{}, context \\ Context.new())</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#send_identify/1">send_identify(i)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#send_identify/3">send_identify(user_id, traits \\ %{}, context \\ Context.new())</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#send_page/1">send_page(p)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#send_page/4">send_page(user_id, name \\ &quot;&quot;, properties \\ %{}, context \\ Context.new())</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#send_screen/1">send_screen(s)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#send_screen/4">send_screen(user_id, name \\ &quot;&quot;, properties \\ %{}, context \\ Context.new())</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#send_track/1">send_track(t)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#send_track/4">send_track(user_id, event, properties \\ %{}, context \\ Context.new())</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#start_link/1">start_link(args)</a>
   </div>
   
 </div>
@@ -119,39 +170,6 @@
         </section>
       
 
-      
-        <section id="types" class="details-list">
-          <h1 class="section-heading">
-            <a class="hover-link" href="#types">
-              <i class="icon-link"></i>
-            </a>
-            Types
-          </h1>
-          <div class="types-list">
-            <div class="detail" id="t:status/0">
-  
-  <div class="detail-header">
-    <a href="#t:status/0" class="detail-link" title="Link to this type">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">status()</span>
-    
-    
-    
-      <div class="specs">
-        
-          <pre><a href="#t:status/0">status</a> :: :ok | :error</pre>
-        
-      </div>
-    
-  </div>
-  <section class="docstring">
-    
-  </section>
-</div>
-
-          </div>
-        </section>
       
 
       
@@ -162,34 +180,219 @@
             </a>
             Functions
           </h1>
-          <div class="detail" id="start_link/1">
+          <div class="detail" id="send_alias/1">
   
   <div class="detail-header">
-    <a href="#start_link/1" class="detail-link" title="Link to this function">
+    <a href="#send_alias/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">start_link(write_key)</span>
+    <span class="signature">send_alias(a)</span>
     
     
-    
-      <div class="specs">
-        
-          <pre>start_link(binary) :: {<a href="Segment.html#t:status/0">Segment.status</a>, pid}</pre>
-        
-      </div>
     
   </div>
   <section class="docstring">
     
   </section>
 </div>
-<div class="detail" id="write_key/0">
+<div class="detail" id="send_alias/3">
+  
+    <span id="send_alias/2" />
   
   <div class="detail-header">
-    <a href="#write_key/0" class="detail-link" title="Link to this function">
+    <a href="#send_alias/3" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">write_key()</span>
+    <span class="signature">send_alias(user_id, previous_id, context \\ Context.new())</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="send_group/1">
+  
+  <div class="detail-header">
+    <a href="#send_group/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">send_group(g)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="send_group/4">
+  
+    <span id="send_group/2" />
+  
+    <span id="send_group/3" />
+  
+  <div class="detail-header">
+    <a href="#send_group/4" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">send_group(user_id, group_id, traits \\ %{}, context \\ Context.new())</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="send_identify/1">
+  
+  <div class="detail-header">
+    <a href="#send_identify/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">send_identify(i)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="send_identify/3">
+  
+    <span id="send_identify/1" />
+  
+    <span id="send_identify/2" />
+  
+  <div class="detail-header">
+    <a href="#send_identify/3" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">send_identify(user_id, traits \\ %{}, context \\ Context.new())</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="send_page/1">
+  
+  <div class="detail-header">
+    <a href="#send_page/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">send_page(p)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="send_page/4">
+  
+    <span id="send_page/1" />
+  
+    <span id="send_page/2" />
+  
+    <span id="send_page/3" />
+  
+  <div class="detail-header">
+    <a href="#send_page/4" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">send_page(user_id, name \\ &quot;&quot;, properties \\ %{}, context \\ Context.new())</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="send_screen/1">
+  
+  <div class="detail-header">
+    <a href="#send_screen/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">send_screen(s)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="send_screen/4">
+  
+    <span id="send_screen/1" />
+  
+    <span id="send_screen/2" />
+  
+    <span id="send_screen/3" />
+  
+  <div class="detail-header">
+    <a href="#send_screen/4" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">send_screen(user_id, name \\ &quot;&quot;, properties \\ %{}, context \\ Context.new())</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="send_track/1">
+  
+  <div class="detail-header">
+    <a href="#send_track/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">send_track(t)</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="send_track/4">
+  
+    <span id="send_track/2" />
+  
+    <span id="send_track/3" />
+  
+  <div class="detail-header">
+    <a href="#send_track/4" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">send_track(user_id, event, properties \\ %{}, context \\ Context.new())</span>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="start_link/1">
+  
+  <div class="detail-header">
+    <a href="#start_link/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">start_link(args)</span>
     
     
     
