@@ -1,4 +1,4 @@
-defmodule Segment.Analytics.Http do
+defmodule Segment.Http do
   use HTTPoison.Base
 
   @base_url "https://api.segment.io/v1/"

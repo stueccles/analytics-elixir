@@ -1,6 +1,6 @@
 defmodule Segment do
   use GenServer
-  alias Segment.Analytics.Http
+  alias Segment.Http
   alias Segment.{Track, Identify, Screen, Alias, Group, Page, Context}
 
   require Logger
