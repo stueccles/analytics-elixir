@@ -1,6 +1,8 @@
 defmodule Segment do
   alias Segment.Analytics.Http
   alias Segment.{Track, Identify, Screen, Alias, Group, Page, Context}
+
+  require Logger
   @type status :: :ok | :error
 
   @spec start_link(binary) :: { Segment.status, pid }

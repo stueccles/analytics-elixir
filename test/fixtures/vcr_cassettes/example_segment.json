@@ -1,0 +1,29 @@
+[
+  {
+    "request": {
+      "body": "{\"userId\":\"343434\",\"timestamp\":null,\"properties\":{},\"method\":\"track\",\"integrations\":null,\"event\":\"track debugging 555314\",\"context\":{\"userAgent\":null,\"traits\":null,\"timezone\":null,\"screen\":null,\"referrer\":null,\"page\":null,\"os\":null,\"network\":null,\"location\":null,\"locale\":null,\"library\":{\"version\":\"0.1.1\",\"name\":\"analytics_elixir\"},\"ip\":null,\"device\":null,\"campaign\":null,\"app\":null},\"anonymousId\":null}",
+      "headers": {
+        "accept": "application/json",
+        "Content-Type": "application/json"
+      },
+      "method": "post",
+      "options": {
+        "basic_auth": "***"
+      },
+      "request_body": "",
+      "url": "https://api.segment.io/v1/track"
+    },
+    "response": {
+      "body": "{\n  \"success\": true\n}",
+      "headers": {
+        "Date": "Tue, 07 Nov 2017 03:21:58 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "21",
+        "Connection": "keep-alive",
+        "Vary": "Origin"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  }
+]

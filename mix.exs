@@ -9,6 +9,9 @@ defmodule AnalyticsElixir.Mixfile do
       deps: deps(),
       description: "analytics_elixir",
       package: package(),
+      preferred_cli_env: [
+        vcr: :test, "vcr.delete": :test, "vcr.check": :test, "vcr.show": :test
+      ],
     ]
   end
 
@@ -32,7 +35,8 @@ defmodule AnalyticsElixir.Mixfile do
     [
       {:httpoison, "~> 0.8"},
       {:poison, "~> 1.3 or ~> 2.0"},
-      {:ex_doc, ">= 0.0.0", only: :dev}
+      {:ex_doc, ">= 0.0.0", only: :dev},
+      {:exvcr, "~> 0.9", only: :test}
     ]
   end
 
