@@ -4,6 +4,7 @@ defmodule Segment.Context do
   @library_version Mix.Project.get().project[:version]
 
   defstruct [
+    :active,
     :app,
     :campaign,
     :device,
