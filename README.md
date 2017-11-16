@@ -31,6 +31,15 @@ ie.
 ```
 config :segment, write_key: "2iFFnRsCfi"
 ```
+3. Set the config variable for which api to use (test, or real)
+ie.
+```
+config :segment, api: Segment.Server
+```
+or
+```
+config :segment, api: Segment.Sandbox
+```
 ### Track
 ```
 Segment.send_track(user_id, event, %{property1: "", property2: ""})
