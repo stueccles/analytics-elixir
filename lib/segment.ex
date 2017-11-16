@@ -5,7 +5,7 @@ defmodule Segment do
 
   alias Segment.{Track, Identify, Screen, Alias, Group, Page, Context}
 
-  @module Application.fetch_env!(:segment, :api)
+  @module Application.get_env(:segment, :api) || Segment.Server
 
   defdelegate send_track(t), to: @module
   defdelegate send_track(user_id, event, properties \\ %{}, context \\ Context.new()), to: @module

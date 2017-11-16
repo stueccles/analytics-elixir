@@ -1,7 +1,7 @@
 defmodule Segment.Application do
   use Application
 
-  @api Application.fetch_env!(:segment, :api)
+  @api Application.get_env(:segment, :api) || Segment.Server
 
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
