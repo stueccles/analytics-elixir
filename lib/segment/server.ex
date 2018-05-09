@@ -71,37 +71,37 @@ defmodule Segment.Server do
   end
 
   def handle_cast(%Track{} = t, state) do
-    resp = Http.post!(t.method, Poison.encode!(t))
+    resp = Http.post!(t.method, Poison.encode!(t), [ ssl: [{:versions, [:'tlsv1.2']}] ])
     Logger.debug fn -> "#{inspect resp}" end
     {:noreply, state}
   end
 
   def handle_cast(%Identify{} = i, state) do
-    resp = Http.post!(i.method, Poison.encode!(i))
+    resp = Http.post!(i.method, Poison.encode!(i), [ ssl: [{:versions, [:'tlsv1.2']}] ])
     Logger.debug fn -> "#{inspect resp}" end
     {:noreply, state}
   end
 
   def handle_cast(%Screen{} = s, state) do
-    resp = Http.post!(s.method, Poison.encode!(s))
+    resp = Http.post!(s.method, Poison.encode!(s), [ ssl: [{:versions, [:'tlsv1.2']}] ])
     Logger.debug fn -> "#{inspect resp}" end
     {:noreply, state}
   end
 
   def handle_cast(%Alias{} = a, state) do
-    resp = Http.post!(a.method, Poison.encode!(a))
+    resp = Http.post!(a.method, Poison.encode!(a), [ ssl: [{:versions, [:'tlsv1.2']}] ])
     Logger.debug fn -> "#{inspect resp}" end
     {:noreply, state}
   end
 
   def handle_cast(%Group{} = g, state) do
-    resp = Http.post!(g.method, Poison.encode!(g))
+    resp = Http.post!(g.method, Poison.encode!(g), [ ssl: [{:versions, [:'tlsv1.2']}] ])
     Logger.debug fn -> "#{inspect resp}" end
     {:noreply, state}
   end
 
   def handle_cast(%Page{} = p, state) do
-    resp = Http.post!(p.method, Poison.encode!(p))
+    resp = Http.post!(p.method, Poison.encode!(p), [ ssl: [{:versions, [:'tlsv1.2']}] ])
     Logger.debug fn -> "#{inspect resp}" end
     {:noreply, state}
   end
