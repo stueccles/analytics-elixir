@@ -8,10 +8,12 @@ defmodule Segment.Analytics.Http do
   end
 
   def post(url, body, headers, options \\ []) do
-    options_with_auth =
-      Keyword.merge(options, [hackney: [basic_auth: {Segment.write_key(), ""}]])
+    augmented_options =
+      options
+      |> Keyword.merge([hackney: [basic_auth: {Segment.write_key(), ""}]])
+      |> maybe_add_sni(url)
 
-    request(:post, url, body, headers, options_with_auth)
+    request(:post, url, body, headers, augmented_options)
   end
 
   def process_options(options) do
@@ -22,5 +24,21 @@ defmodule Segment.Analytics.Http do
     headers
     |> Keyword.put(:"Content-Type", "application/json")
     |> Keyword.put(:"accept", "application/json")
+  end
+
+  # Adds Server Name Indication SSL option to HTTPoison options, if applicable.
+  # This shouldn't be necessary, but addresses an issue with TLS handshake failures.
+  defp maybe_add_sni(options, url) do
+    host = URI.parse(url).host
+    ssl_options = Keyword.get(options, :ssl)
+
+    # http_util.is_hostname expects a charlist, not a String/binary
+    if host && String.to_charlist(host) |> :http_util.is_hostname() do
+      # Prefer caller-supplied value for server_name_indication option.
+      ssl_options_with_sni = Keyword.merge([server_name_indication: host], ssl_options || [])
+      Keyword.merge(options, [ssl: ssl_options_with_sni])
+    else
+      options
+    end
   end
 end
