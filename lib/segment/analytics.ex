@@ -8,11 +8,13 @@ defmodule Segment.Analytics do
     call(t)
   end
 
-  def track(user_id, event, properties \\ %{}, context \\ Context.new) do
-    %Segment.Analytics.Track{ userId: user_id,
-                              event: event,
-                              properties: properties,
-                              context: context }
+  def track(user_id, event, properties \\ %{}, context \\ Context.new()) do
+    %Segment.Analytics.Track{
+      userId: user_id,
+      event: event,
+      properties: properties,
+      context: context
+    }
     |> call
   end
 
@@ -20,10 +22,8 @@ defmodule Segment.Analytics do
     call(i)
   end
 
-  def identify(user_id, traits \\ %{}, context \\ Context.new) do
-    %Segment.Analytics.Identify{  userId: user_id,
-                                      traits: traits,
-                                      context: context }
+  def identify(user_id, traits \\ %{}, context \\ Context.new()) do
+    %Segment.Analytics.Identify{userId: user_id, traits: traits, context: context}
     |> call
   end
 
@@ -31,11 +31,13 @@ defmodule Segment.Analytics do
     call(s)
   end
 
-  def screen(user_id, name \\ "", properties \\ %{}, context \\ Context.new ) do
-    %Segment.Analytics.Screen{  userId: user_id,
-                                    name: name,
-                                    properties: properties,
-                                    context: context }
+  def screen(user_id, name \\ "", properties \\ %{}, context \\ Context.new()) do
+    %Segment.Analytics.Screen{
+      userId: user_id,
+      name: name,
+      properties: properties,
+      context: context
+    }
     |> call
   end
 
@@ -43,10 +45,8 @@ defmodule Segment.Analytics do
     call(a)
   end
 
-  def alias(user_id, previous_id, context \\ Context.new) do
-    %Segment.Analytics.Alias{ userId: user_id,
-                                  previousId: previous_id,
-                                  context: context }
+  def alias(user_id, previous_id, context \\ Context.new()) do
+    %Segment.Analytics.Alias{userId: user_id, previousId: previous_id, context: context}
     |> call
   end
 
@@ -54,11 +54,8 @@ defmodule Segment.Analytics do
     call(g)
   end
 
-  def group(user_id, group_id, traits \\ %{}, context \\ Context.new) do
-    %Segment.Analytics.Group{ userId: user_id,
-                                  groupId: group_id,
-                                  traits: traits,
-                                  context: context }
+  def group(user_id, group_id, traits \\ %{}, context \\ Context.new()) do
+    %Segment.Analytics.Group{userId: user_id, groupId: group_id, traits: traits, context: context}
     |> call
   end
 
@@ -66,11 +63,8 @@ defmodule Segment.Analytics do
     call(p)
   end
 
-  def page(user_id, name \\ "", properties \\ %{}, context \\ Context.new ) do
-    %Segment.Analytics.Page{  userId: user_id,
-                                  name: name,
-                                  properties: properties,
-                                  context: context }
+  def page(user_id, name \\ "", properties \\ %{}, context \\ Context.new()) do
+    %Segment.Analytics.Page{userId: user_id, name: name, properties: properties, context: context}
     |> call
   end
 
@@ -84,17 +78,17 @@ defmodule Segment.Analytics do
   end
 
   defp log_result({_, %{status_code: code}}, function, body) when code in 200..299 do
-    #success
+    # success
     Logger.debug("Segment #{function} call success: #{code} with body: #{body}")
   end
 
   defp log_result({_, %{status_code: code}}, function, body) do
-    #HTTP failure
+    # HTTP failure
     Logger.debug("Segment #{function} call failed: #{code} with body: #{body}")
   end
 
   defp log_result(error, function, body) do
-    #every other failure
+    # every other failure
     Logger.debug("Segment #{function} call failed: #{inspect(error)} with body: #{body}")
   end
 end
