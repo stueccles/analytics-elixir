@@ -11,9 +11,10 @@ and then `mix deps.get`
 
 ## Usage
 
-Start the Segment agent with your write_key from Segment
+Start the Segment agent with your write_key from Segment, and the endpoint.
+The __endpoint__ is optional and if omitted, it defaults to `https://api.segment.io/v1/`.
 ```
-Segment.start_link("YOUR_WRITE_KEY")
+Segment.start_link("YOUR_SEGMENT_KEY", "https://example.com/v1")
 ```
 There are then two ways to call the different methods on the API.
 A basic way through `Segment.Analytics` or by passing a full Struct
@@ -25,6 +26,7 @@ This is how I add to a Phoenix project (may not be your preferred way)
 
 1. Add the following to deps section of your mix.exs: `{:segment, github: "stueccles/analytics-elixir"}`
    and then `mix deps.get`
+
 2. Add segment to applications list in the Phoenix project mix.exs
 ie.
 ```
@@ -34,16 +36,20 @@ def application do
                   :phoenix_ecto, :postgrex, :segment]]
 end
 ```
+
 3. Add a config variable for your write_key (may want to make this environment dependent)
 ie.
 ```
 config :segment,
-  write_key: "2iFFnRsCfi"
+  key: "your_segment_key",
+  endpoint: "https://api.segment.io/v1/"
 ```
+The __endpoint__ is optional (as specified in the Usage section above).
+
 4. Start the segment agent as a child of the application in the application file under
 the lib directory. In the children list add:
 ```
-worker(Segment, [Application.get_env(:segment, :write_key)])
+{Segment, [Application.get_env(:segment, :key), Application.get_env(:segment, :endpoint)]}
 ```
 
 ### Track
