@@ -11,6 +11,39 @@ defmodule Segment do
   end
 
   @doc """
+  The child specifications
+
+  ## Examples
+
+    iex> Segment.child_spec([key: "something"])
+    %{
+      id: Segment,
+      start: {Segment, :start_link, ["something", nil]}
+    }
+
+    iex> Segment.child_spec([])
+    ** (KeyError) key :key not found in: []
+
+    iex> Segment.child_spec([key: "something", endpoint: "http://example.com"])
+    %{
+      id: Segment,
+      start: {Segment, :start_link, ["something", "http://example.com"]}
+    }
+
+  """
+  def child_spec(arg) do
+    opts = [
+      Keyword.fetch!(arg, :key),
+      Keyword.get(arg, :endpoint)
+    ]
+
+    %{
+      id: Segment,
+      start: {Segment, :start_link, opts}
+    }
+  end
+
+  @doc """
   Returns the segment key
 
   ## Examples
