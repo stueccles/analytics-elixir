@@ -32,7 +32,8 @@ defmodule AnalyticsElixir.Mixfile do
     [
       {:httpoison, "~> 1.4"},
       {:poison, "~> 4.0"},
-      {:ex_doc, "~> 0.19", only: :dev, runtime: false}
+      {:ex_doc, "~> 0.19", only: :dev, runtime: false},
+      {:bypass, "~> 1.0", only: :test}
     ]
   end
 
