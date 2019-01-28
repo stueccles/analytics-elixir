@@ -4,6 +4,17 @@ defmodule Segment.Analytics do
 
   require Logger
 
+  def batch_track(events) when is_list(events) do
+    %Segment.Analytics.BatchTrack{
+      batch: Enum.map(events, fn e -> valid_track_event(e) end)
+    }
+    |> call
+  end
+
+  defp valid_track_event(track = %Segment.Analytics.Track{}) do
+    track
+  end
+
   def track(t = %Segment.Analytics.Track{}) do
     call(t)
   end

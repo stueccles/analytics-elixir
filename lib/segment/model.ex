@@ -1,3 +1,13 @@
+defmodule Segment.Analytics.BatchTrack do
+  @derive {Poison.Encoder, except: [:method]}
+  @method "track"
+
+  defstruct [
+    :batch,
+    method: @method
+  ]
+end
+
 defmodule Segment.Analytics.Track do
   @derive [Poison.Encoder]
   @method "track"
