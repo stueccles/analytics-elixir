@@ -13,6 +13,6 @@ defmodule Segment.Analytics.Http do
     headers
     |> Keyword.put(:"Content-Type", "application/json")
     |> Keyword.put(:accept, "application/json")
-    |> Keyword.put(:"X-API-Key", Segment.key())
+    |> Keyword.put(:"x-api-key", Segment.key())
   end
 end

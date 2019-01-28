@@ -84,18 +84,14 @@ defmodule Segment.Analytics do
   end
 
   defp post_to_segment(function, body) do
-    Http.post(function, body)
+    # all the requests go to the root url
+    Http.post("", body)
     |> log_result(function, body)
   end
 
   defp log_result({_, %{status_code: code}}, function, body) when code in 200..299 do
     # success
     Logger.debug("Segment #{function} call success: #{code} with body: #{body}")
-  end
-
-  defp log_result({_, %{status_code: code}}, function, body) do
-    # HTTP failure
-    Logger.debug("Segment #{function} call failed: #{code} with body: #{body}")
   end
 
   defp log_result(error, function, body) do
