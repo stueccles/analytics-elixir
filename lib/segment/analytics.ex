@@ -4,22 +4,9 @@ defmodule Segment.Analytics do
 
   require Logger
 
-  def batch_track(events) when is_list(events) do
-    %Segment.Analytics.BatchTrack{
-      batch: Enum.map(events, fn e -> valid_track_event(e) end)
-    }
-    |> call
-  end
+  def track(t = %Segment.Analytics.Track{}), do: call(t)
 
-  defp valid_track_event(track = %Segment.Analytics.Track{}) do
-    track
-  end
-
-  def track(t = %Segment.Analytics.Track{}) do
-    call(t)
-  end
-
-  def track(user_id, event, properties \\ %{}, context \\ Context.new()) do
+  def track(user_id, event, properties \\ %{}, context \\ %Context{}) do
     %Segment.Analytics.Track{
       userId: user_id,
       event: event,
@@ -29,20 +16,20 @@ defmodule Segment.Analytics do
     |> call
   end
 
-  def identify(i = %Segment.Analytics.Identify{}) do
-    call(i)
-  end
+  def identify(i = %Segment.Analytics.Identify{}), do: call(i)
 
-  def identify(user_id, traits \\ %{}, context \\ Context.new()) do
-    %Segment.Analytics.Identify{userId: user_id, traits: traits, context: context}
+  def identify(user_id, traits \\ %{}, context \\ %Context{}) do
+    %Segment.Analytics.Identify{
+      userId: user_id,
+      traits: traits,
+      context: context
+    }
     |> call
   end
 
-  def screen(s = %Segment.Analytics.Screen{}) do
-    call(s)
-  end
+  def screen(s = %Segment.Analytics.Screen{}), do: call(s)
 
-  def screen(user_id, name \\ "", properties \\ %{}, context \\ Context.new()) do
+  def screen(user_id, name \\ "", properties \\ %{}, context \\ %Context{}) do
     %Segment.Analytics.Screen{
       userId: user_id,
       name: name,
@@ -52,50 +39,79 @@ defmodule Segment.Analytics do
     |> call
   end
 
-  def alias(a = %Segment.Analytics.Alias{}) do
-    call(a)
-  end
+  def alias(a = %Segment.Analytics.Alias{}), do: call(a)
 
-  def alias(user_id, previous_id, context \\ Context.new()) do
-    %Segment.Analytics.Alias{userId: user_id, previousId: previous_id, context: context}
+  def alias(user_id, previous_id, context \\ %Context{}) do
+    %Segment.Analytics.Alias{
+      userId: user_id,
+      previousId: previous_id,
+      context: context
+    }
     |> call
   end
 
-  def group(g = %Segment.Analytics.Group{}) do
-    call(g)
-  end
+  def group(g = %Segment.Analytics.Group{}), do: call(g)
 
-  def group(user_id, group_id, traits \\ %{}, context \\ Context.new()) do
-    %Segment.Analytics.Group{userId: user_id, groupId: group_id, traits: traits, context: context}
+  def group(user_id, group_id, traits \\ %{}, context \\ %Context{}) do
+    %Segment.Analytics.Group{
+      userId: user_id,
+      groupId: group_id,
+      traits: traits,
+      context: context
+    }
     |> call
   end
 
-  def page(p = %Segment.Analytics.Page{}) do
-    call(p)
-  end
+  def page(p = %Segment.Analytics.Page{}), do: call(p)
 
-  def page(user_id, name \\ "", properties \\ %{}, context \\ Context.new()) do
-    %Segment.Analytics.Page{userId: user_id, name: name, properties: properties, context: context}
+  def page(user_id, name \\ "", properties \\ %{}, context \\ %Context{}) do
+    %Segment.Analytics.Page{
+      userId: user_id,
+      name: name,
+      properties: properties,
+      context: context
+    }
     |> call
   end
 
-  defp call(api) do
-    Task.async(fn -> post_to_segment(api.method, Poison.encode!(api)) end)
+  defp call(model) do
+    batch =
+      model
+      |> fill_context()
+      |> fill_dates()
+      |> model_to_batch()
+      |> Poison.encode!()
+
+    Task.async(fn -> post_to_segment(batch) end)
   end
 
-  defp post_to_segment(function, body) do
-    # all the requests go to the root url
+  # TODO: replace with an actual buffering
+  # to send events in batches rather than one by one
+  # The idea is to reduce the traffic to the segment service
+  defp model_to_batch(model) do
+    %{batch: [model]}
+  end
+
+  defp fill_context(model) do
+    put_in(model.context.library, Segment.Analytics.Context.Library.build())
+  end
+
+  defp fill_dates(model) do
+    put_in(model.sentAt, :os.system_time(:milli_seconds))
+  end
+
+  defp post_to_segment(body) do
     Http.post("", body)
-    |> log_result(function, body)
+    |> log_result(body)
   end
 
-  defp log_result({_, %{status_code: code}}, function, body) when code in 200..299 do
-    # success
-    Logger.debug("Segment #{function} call success: #{code} with body: #{body}")
+  # log success responses
+  defp log_result({_, %{status_code: code}}, body) when code in 200..299 do
+    Logger.debug("[#{__MODULE__}] call success: #{code} with body: #{body}")
   end
 
-  defp log_result(error, function, body) do
-    # every other failure
-    Logger.debug("Segment #{function} call failed: #{inspect(error)} with body: #{body}")
+  # log failed responses
+  defp log_result(error, body) do
+    Logger.debug("[#{__MODULE__}] call failed: #{inspect(error)} with body: #{body}")
   end
 end

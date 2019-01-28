@@ -7,6 +7,7 @@ defmodule AnalyticsElixir.Mixfile do
       version: "0.1.2",
       elixir: "~> 1.0",
       deps: deps(),
+      name: "analytics_elixir",
       description: "analytics_elixir",
       package: package()
     ]

@@ -10,8 +10,8 @@ defmodule Segment.Analytics.AnalyticsTest do
     {:ok, bypass: bypass}
   end
 
-  describe "batch_track/1" do
-    test "send a batch event", %{bypass: bypass} do
+  describe "track/1" do
+    test "send a track event", %{bypass: bypass} do
       Bypass.expect(bypass, fn conn ->
         body = ~s"""
         {
@@ -35,16 +35,14 @@ defmodule Segment.Analytics.AnalyticsTest do
         Plug.Conn.resp(conn, 200, "")
       end)
 
-      events = [
-        %Segment.Analytics.Track{
-          userId: nil,
-          event: "test1",
-          properties: %{},
-          context: %{}
-        }
-      ]
+      event = %Segment.Analytics.Track{
+        userId: nil,
+        event: "test1",
+        properties: %{},
+        context: %Segment.Analytics.Context{}
+      }
 
-      task = Segment.Analytics.batch_track(events)
+      task = Segment.Analytics.track(event)
       Task.await(task)
     end
   end

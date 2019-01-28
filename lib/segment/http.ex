@@ -5,10 +5,6 @@ defmodule Segment.Analytics.Http do
     Segment.endpoint() <> url
   end
 
-  def post(url, body, headers, options \\ []) do
-    request(:post, url, body, headers, options)
-  end
-
   def process_request_headers(headers) do
     headers
     |> Keyword.put(:"Content-Type", "application/json")

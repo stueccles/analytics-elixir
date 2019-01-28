@@ -20,6 +20,7 @@ defmodule Segment.Analytics.Track do
     :timestamp,
     :integrations,
     :anonymousId,
+    :sentAt,
     method: @method
   ]
 end
@@ -86,11 +87,26 @@ defmodule Segment.Analytics.Group do
   ]
 end
 
+defmodule Segment.Analytics.Context.Library do
+  @derive [Poison.Encoder]
+
+  @project_name Mix.Project.get().project[:name]
+  @project_version Mix.Project.get().project[:version]
+
+  defstruct [:name, :version, :transport]
+
+  def build() do
+    %__MODULE__{
+      name: @project_name,
+      version: @project_version,
+      # the only supported by the library for now.
+      transport: "http"
+    }
+  end
+end
+
 defmodule Segment.Analytics.Context do
   @derive [Poison.Encoder]
-  @library_name Mix.Project.get().project[:description]
-  @library_version Mix.Project.get().project[:version]
-
   defstruct [
     :app,
     :campaign,
@@ -108,12 +124,4 @@ defmodule Segment.Analytics.Context do
     :traits,
     :userAgent
   ]
-
-  def update(context = %__MODULE__{}) do
-    %{context | library: %{name: @library_name, version: @library_version}}
-  end
-
-  def new do
-    update(%__MODULE__{})
-  end
 end
