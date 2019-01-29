@@ -17,7 +17,7 @@ defmodule AnalyticsElixir.Mixfile do
   #
   # Type `mix help compile.app` for more information
   def application do
-    [applications: [:httpoison, :logger, :poison]]
+    [applications: [:httpoison, :logger, :poison, :uuid]]
   end
 
   # Dependencies can be Hex packages:
