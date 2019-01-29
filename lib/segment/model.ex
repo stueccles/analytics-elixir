@@ -1,10 +1,9 @@
-defmodule Segment.Analytics.BatchTrack do
-  @derive {Poison.Encoder, except: [:method]}
-  @method "track"
+defmodule Segment.Analytics.Batch do
+  @derive [Poison.Encoder]
 
   defstruct [
     :batch,
-    method: @method
+    :sentAt
   ]
 end
 
@@ -20,8 +19,8 @@ defmodule Segment.Analytics.Track do
     :timestamp,
     :integrations,
     :anonymousId,
-    :sentAt,
-    method: @method
+    :messageId,
+    type: @method
   ]
 end
 
@@ -29,14 +28,23 @@ defmodule Segment.Analytics.Identify do
   @derive [Poison.Encoder]
   @method "identify"
 
-  defstruct [:userId, :traits, :context, :timestamp, :integrations, :anonymousId, method: @method]
+  defstruct [
+    :userId,
+    :traits,
+    :context,
+    :timestamp,
+    :integrations,
+    :anonymousId,
+    :messageId,
+    type: @method
+  ]
 end
 
 defmodule Segment.Analytics.Alias do
   @derive [Poison.Encoder]
   @method "alias"
 
-  defstruct [:userId, :previousId, :context, :timestamp, :integrations, method: @method]
+  defstruct [:userId, :previousId, :context, :timestamp, :integrations, type: @method]
 end
 
 defmodule Segment.Analytics.Page do
@@ -51,7 +59,8 @@ defmodule Segment.Analytics.Page do
     :timestamp,
     :integrations,
     :anonymousId,
-    method: @method
+    :messageId,
+    type: @method
   ]
 end
 
@@ -67,7 +76,8 @@ defmodule Segment.Analytics.Screen do
     :timestamp,
     :integrations,
     :anonymousId,
-    method: @method
+    :messageId,
+    type: @method
   ]
 end
 
@@ -83,7 +93,8 @@ defmodule Segment.Analytics.Group do
     :timestamp,
     :integrations,
     :anonymousId,
-    method: @method
+    :messageId,
+    type: @method
   ]
 end
 
@@ -107,6 +118,7 @@ end
 
 defmodule Segment.Analytics.Context do
   @derive [Poison.Encoder]
+
   defstruct [
     :app,
     :campaign,

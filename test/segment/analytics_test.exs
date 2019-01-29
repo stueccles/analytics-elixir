@@ -13,24 +13,44 @@ defmodule Segment.Analytics.AnalyticsTest do
   describe "track/1" do
     test "send a track event", %{bypass: bypass} do
       Bypass.expect(bypass, fn conn ->
-        body = ~s"""
-        {
-          "batch":[
-            {
-              "userId":null,
-              "timestamp":null,
-              "properties":{},
-              "method":"track",
-              "integrations":null,
-              "event":"test1",
-              "context":{},
-              "anonymousId":null
-            }
-          ]
-        }
-        """
+        {:ok, received_body, _conn} = Plug.Conn.read_body(conn)
 
-        assert {:ok, body, _conn} = Plug.Conn.read_body(conn)
+        assert %{
+                 "batch" => [
+                   %{
+                     "userId" => nil,
+                     "type" => "track",
+                     "timestamp" => nil,
+                     "properties" => %{},
+                     "integrations" => nil,
+                     "event" => "test1",
+                     "context" => %{
+                       "userAgent" => nil,
+                       "traits" => nil,
+                       "timezone" => nil,
+                       "screen" => nil,
+                       "referrer" => nil,
+                       "page" => nil,
+                       "os" => nil,
+                       "network" => nil,
+                       "location" => nil,
+                       "locale" => nil,
+                       "library" => %{
+                         "version" => "0.1.2",
+                         "transport" => "http",
+                         "name" => "analytics_elixir"
+                       },
+                       "ip" => nil,
+                       "device" => nil,
+                       "campaign" => nil,
+                       "app" => nil
+                     },
+                     "anonymousId" => nil
+                   }
+                 ]
+               } = Poison.decode!(received_body)
+
+        # messageId and sentAt are not asserted
 
         Plug.Conn.resp(conn, 200, "")
       end)

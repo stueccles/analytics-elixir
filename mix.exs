@@ -34,7 +34,8 @@ defmodule AnalyticsElixir.Mixfile do
       {:httpoison, "~> 1.4"},
       {:poison, "~> 4.0"},
       {:ex_doc, "~> 0.19", only: :dev, runtime: false},
-      {:bypass, "~> 1.0", only: :test}
+      {:bypass, "~> 1.0", only: :test},
+      {:uuid, "~> 1.1"}
     ]
   end
 
@@ -42,9 +43,9 @@ defmodule AnalyticsElixir.Mixfile do
     # These are the default files included in the package
     [
       files: ["lib", "mix.exs", "README*", "LICENSE*"],
-      maintainers: ["Stuart Eccles"],
+      maintainers: ["Antonio Lorusso", "Fernando Hamasaki de Amorim"],
       licenses: ["MIT"],
-      links: %{"GitHub" => "https://github.com/stueccles/analytics-elixir"}
+      links: %{"GitHub" => "https://github.com/FindHotel/analytics-elixir"}
     ]
   end
 end

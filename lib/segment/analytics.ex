@@ -77,9 +77,9 @@ defmodule Segment.Analytics do
   defp call(model) do
     batch =
       model
+      |> generate_message_id()
       |> fill_context()
-      |> fill_dates()
-      |> model_to_batch()
+      |> wrap_in_batch()
       |> Poison.encode!()
 
     Task.async(fn -> post_to_segment(batch) end)
@@ -88,16 +88,19 @@ defmodule Segment.Analytics do
   # TODO: replace with an actual buffering
   # to send events in batches rather than one by one
   # The idea is to reduce the traffic to the segment service
-  defp model_to_batch(model) do
-    %{batch: [model]}
+  defp wrap_in_batch(model) do
+    %Segment.Analytics.Batch{
+      batch: [model],
+      sentAt: :os.system_time(:milli_seconds)
+    }
   end
 
   defp fill_context(model) do
     put_in(model.context.library, Segment.Analytics.Context.Library.build())
   end
 
-  defp fill_dates(model) do
-    put_in(model.sentAt, :os.system_time(:milli_seconds))
+  defp generate_message_id(model) do
+    put_in(model.messageId, UUID.uuid4())
   end
 
   defp post_to_segment(body) do
