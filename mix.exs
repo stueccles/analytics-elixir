@@ -8,7 +8,7 @@ defmodule AnalyticsElixir.Mixfile do
       elixir: "~> 1.0",
       deps: deps(),
       description: "analytics_elixir",
-      package: package(),
+      package: package()
     ]
   end
 
@@ -32,16 +32,17 @@ defmodule AnalyticsElixir.Mixfile do
     [
       {:httpoison, "~> 0.12"},
       {:poison, "~> 1.3 or ~> 2.0 or ~> 3.1.0"},
-      {:ex_doc, ">= 0.0.0", only: :dev}
+      {:ex_doc, "~> 0.21", only: :dev, runtime: false}
     ]
   end
 
   defp package do
-    [ # These are the default files included in the package
+    # These are the default files included in the package
+    [
       files: ["lib", "mix.exs", "README*", "LICENSE*"],
       maintainers: ["Stuart Eccles"],
       licenses: ["MIT"],
-      links: %{ "GitHub" => "https://github.com/stueccles/analytics-elixir" }
+      links: %{"GitHub" => "https://github.com/stueccles/analytics-elixir"}
     ]
   end
 end
