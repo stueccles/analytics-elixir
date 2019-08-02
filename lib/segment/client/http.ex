@@ -1,3 +1,12 @@
+defmodule Segment.Analytics.AdapterStub do
+  require Logger
+
+  def call(env, _opts) do
+    Logger.debug("[Segment] HTTP API called with #{inspect(env)}")
+    {:ok, %{env | status: 200, body: ""}}
+  end
+end
+
 defmodule Segment.Http do
   require Logger
   use Retry
@@ -5,21 +14,33 @@ defmodule Segment.Http do
   @type client() :: Tesla.Client.t()
 
   @segment_api_url "https://api.segment.io/v1/"
+  @send_to_http Application.get_env(:segment, :send_to_http, true)
   @retry_attempts Application.get_env(:segment, :retry_attempts, 3)
   @retry_expiry Application.get_env(:segment, :retry_expiry, 10_000)
   @retry_start Application.get_env(:segment, :retry_start, 100)
 
   @spec client(String.t()) :: client()
   def client(api_key) do
+    adapter =
+      case @send_to_http do
+        true ->
+          Application.get_env(:segment, :tesla)[:adapter] ||
+            {Tesla.Adapter.Hackney, [recv_timeout: 30_000]}
+
+        false ->
+          {Segment.Analytics.AdapterStub, []}
+      end
+
+    client(api_key, adapter)
+  end
+
+  @spec client(String.t(), any()) :: client()
+  def client(api_key, adapter) do
     middleware = [
       {Tesla.Middleware.BaseUrl, @segment_api_url},
       Tesla.Middleware.JSON,
       {Tesla.Middleware.BasicAuth, %{username: api_key, password: ""}}
     ]
-
-    adapter =
-      Application.get_env(:segment, :tesla)[:adapter] ||
-        {Tesla.Adapter.Hackney, [recv_timeout: 30_000]}
 
     Tesla.client(middleware, adapter)
   end

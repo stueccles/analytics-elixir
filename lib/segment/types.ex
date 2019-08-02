@@ -20,6 +20,10 @@ defmodule Segment.Analytics.Track do
                 :properties,
                 type: @method
               ]
+
+  def new(attrs) do
+    struct(__MODULE__, attrs)
+  end
 end
 
 defmodule Segment.Analytics.Identify do
@@ -30,6 +34,10 @@ defmodule Segment.Analytics.Identify do
                 :traits,
                 type: @method
               ]
+
+  def new(attrs) do
+    struct(__MODULE__, attrs)
+  end
 end
 
 defmodule Segment.Analytics.Alias do
@@ -40,6 +48,10 @@ defmodule Segment.Analytics.Alias do
                 :previousId,
                 type: @method
               ]
+
+  def new(attrs) do
+    struct(__MODULE__, attrs)
+  end
 end
 
 defmodule Segment.Analytics.Page do
@@ -51,6 +63,10 @@ defmodule Segment.Analytics.Page do
                 :properties,
                 type: @method
               ]
+
+  def new(attrs) do
+    struct(__MODULE__, attrs)
+  end
 end
 
 defmodule Segment.Analytics.Screen do
@@ -62,6 +78,10 @@ defmodule Segment.Analytics.Screen do
                 :properties,
                 type: @method
               ]
+
+  def new(attrs) do
+    struct(__MODULE__, attrs)
+  end
 end
 
 defmodule Segment.Analytics.Group do
@@ -73,6 +93,10 @@ defmodule Segment.Analytics.Group do
                 :traits,
                 type: @method
               ]
+
+  def new(attrs) do
+    struct(__MODULE__, attrs)
+  end
 end
 
 defmodule Segment.Analytics.Context do
@@ -105,5 +129,10 @@ defmodule Segment.Analytics.Context do
 
   def new do
     update(%__MODULE__{})
+  end
+
+  def new(attrs) do
+    struct(__MODULE__, attrs)
+    |> update
   end
 end

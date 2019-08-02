@@ -6,10 +6,15 @@ defmodule Segment.Analytics.Batcher do
   alias Segment.Analytics.{Track, Identify, Screen, Alias, Group, Page}
 
   @max_batch_size Application.get_env(:segment, :max_batch_size, 100)
-  @batch_every_ms Application.get_env(:segment, :batch_every_ms, 5000)
+  @batch_every_ms Application.get_env(:segment, :batch_every_ms, 2000)
 
   def start_link(api_key) do
     client = Segment.Http.client(api_key)
+    GenServer.start_link(__MODULE__, {client, :queue.new()}, name: __MODULE__)
+  end
+
+  def start_link(api_key, adapter) do
+    client = Segment.Http.client(api_key, adapter)
     GenServer.start_link(__MODULE__, {client, :queue.new()}, name: __MODULE__)
   end
 

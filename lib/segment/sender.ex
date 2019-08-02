@@ -10,6 +10,11 @@ defmodule Segment.Analytics.Sender do
     GenServer.start_link(__MODULE__, client, name: __MODULE__)
   end
 
+  def start_link(api_key, adapter) do
+    client = Segment.Http.client(api_key, adapter)
+    GenServer.start_link(__MODULE__, {client, :queue.new()}, name: __MODULE__)
+  end
+
   # client
   def call(event = %Track{}), do: callp(event)
   def call(event = %Identify{}), do: callp(event)
