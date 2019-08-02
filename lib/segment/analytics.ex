@@ -1,100 +1,73 @@
 defmodule Segment.Analytics do
-  alias Segment.Analytics.Context
-  alias Segment.Analytics.Http
+  alias Segment.Analytics.{Track, Identify, Screen, Context, Alias, Group, Page}
 
-  require Logger
+  @service Application.get_env(:segment, :sender_impl, Segment.Analytics.Batcher)
 
-  def track(t = %Segment.Analytics.Track{}) do
+  def track(t = %Track{}) do
     call(t)
   end
 
-  def track(user_id, event, properties \\ %{}, context \\ Context.new) do
-    %Segment.Analytics.Track{ userId: user_id,
-                              event: event,
-                              properties: properties,
-                              context: context }
+  def track(user_id, event, properties \\ %{}, context \\ Context.new()) do
+    %Track{
+      userId: user_id,
+      event: event,
+      properties: properties,
+      context: context
+    }
     |> call
   end
 
-  def identify(i = %Segment.Analytics.Identify{}) do
+  def identify(i = %Identify{}) do
     call(i)
   end
 
-  def identify(user_id, traits \\ %{}, context \\ Context.new) do
-    %Segment.Analytics.Identify{  userId: user_id,
-                                      traits: traits,
-                                      context: context }
+  def identify(user_id, traits \\ %{}, context \\ Context.new()) do
+    %Identify{userId: user_id, traits: traits, context: context}
     |> call
   end
 
-  def screen(s = %Segment.Analytics.Screen{}) do
+  def screen(s = %Screen{}) do
     call(s)
   end
 
-  def screen(user_id, name \\ "", properties \\ %{}, context \\ Context.new ) do
-    %Segment.Analytics.Screen{  userId: user_id,
-                                    name: name,
-                                    properties: properties,
-                                    context: context }
+  def screen(user_id, name \\ "", properties \\ %{}, context \\ Context.new()) do
+    %Screen{
+      userId: user_id,
+      name: name,
+      properties: properties,
+      context: context
+    }
     |> call
   end
 
-  def alias(a = %Segment.Analytics.Alias{}) do
+  def alias(a = %Alias{}) do
     call(a)
   end
 
-  def alias(user_id, previous_id, context \\ Context.new) do
-    %Segment.Analytics.Alias{ userId: user_id,
-                                  previousId: previous_id,
-                                  context: context }
+  def alias(user_id, previous_id, context \\ Context.new()) do
+    %Alias{userId: user_id, previousId: previous_id, context: context}
     |> call
   end
 
-  def group(g = %Segment.Analytics.Group{}) do
+  def group(g = %Group{}) do
     call(g)
   end
 
-  def group(user_id, group_id, traits \\ %{}, context \\ Context.new) do
-    %Segment.Analytics.Group{ userId: user_id,
-                                  groupId: group_id,
-                                  traits: traits,
-                                  context: context }
+  def group(user_id, group_id, traits \\ %{}, context \\ Context.new()) do
+    %Group{userId: user_id, groupId: group_id, traits: traits, context: context}
     |> call
   end
 
-  def page(p = %Segment.Analytics.Page{}) do
+  def page(p = %Page{}) do
     call(p)
   end
 
-  def page(user_id, name \\ "", properties \\ %{}, context \\ Context.new ) do
-    %Segment.Analytics.Page{  userId: user_id,
-                                  name: name,
-                                  properties: properties,
-                                  context: context }
+  def page(user_id, name \\ "", properties \\ %{}, context \\ Context.new()) do
+    %Page{userId: user_id, name: name, properties: properties, context: context}
     |> call
   end
 
-  defp call(api) do
-    Task.async(fn -> post_to_segment(api.method, Poison.encode!(api)) end)
-  end
-
-  defp post_to_segment(function, body) do
-    Http.post(function, body)
-    |> log_result(function, body)
-  end
-
-  defp log_result({_, %{status_code: code}}, function, body) when code in 200..299 do
-    #success
-    Logger.debug("Segment #{function} call success: #{code} with body: #{body}")
-  end
-
-  defp log_result({_, %{status_code: code}}, function, body) do
-    #HTTP failure
-    Logger.debug("Segment #{function} call failed: #{code} with body: #{body}")
-  end
-
-  defp log_result(error, function, body) do
-    #every other failure
-    Logger.debug("Segment #{function} call failed: #{inspect(error)} with body: #{body}")
+  defp call(event) do
+    @service.call(event)
   end
 end
