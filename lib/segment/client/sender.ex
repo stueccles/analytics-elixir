@@ -27,7 +27,7 @@ defmodule Segment.Analytics.Sender do
 
   @impl true
   def handle_cast({:send, event}, client) do
-    Task.async(fn -> Segment.Http.call(client, event) end)
+    Task.start_link(fn -> Segment.Http.call(client, event) end)
     {:noreply, client}
   end
 

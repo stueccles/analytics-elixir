@@ -1,6 +1,6 @@
 import Config
 
-config :segment, :service, Segment.Analytics.Batcher
+config :segment, :sender_impl, Segment.Analytics.Sender
 config :segment, :max_batch_size, 100
 config :segment, :batch_every_ms, 5_000
 

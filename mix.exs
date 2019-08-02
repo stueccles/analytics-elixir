@@ -16,7 +16,7 @@ defmodule AnalyticsElixir.Mixfile do
   #
   # Type `mix help compile.app` for more information
   def application do
-    [applications: [:logger, :retry]]
+    [applications: [:hackney, :logger, :retry]]
   end
 
   # Dependencies can be Hex packages:
