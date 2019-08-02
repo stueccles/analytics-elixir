@@ -4,7 +4,7 @@ defmodule AnalyticsElixir.Mixfile do
   def project do
     [
       app: :segment,
-      version: "0.1.2",
+      version: "0.2.0",
       elixir: "~> 1.0",
       deps: deps(),
       description: "analytics_elixir",
@@ -16,7 +16,7 @@ defmodule AnalyticsElixir.Mixfile do
   #
   # Type `mix help compile.app` for more information
   def application do
-    [applications: [:httpoison, :logger, :poison, :retry]]
+    [applications: [:logger, :retry]]
   end
 
   # Dependencies can be Hex packages:
@@ -30,8 +30,6 @@ defmodule AnalyticsElixir.Mixfile do
   # Type `mix help deps` for more examples and options
   defp deps do
     [
-      {:httpoison, "~> 1.5"},
-      {:poison, "~> 1.3 or ~> 2.0 or ~> 3.1.0"},
       {:ex_doc, "~> 0.21", only: :dev, runtime: false},
       {:tesla, "~> 1.2.0"},
       {:hackney, "~> 1.14.0"},
