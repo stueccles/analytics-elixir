@@ -16,12 +16,10 @@ defmodule Segment.Analytics.Sender do
   end
 
   # client
-  def call(event = %Track{}), do: callp(event)
-  def call(event = %Identify{}), do: callp(event)
-  def call(event = %Screen{}), do: callp(event)
-  def call(event = %Alias{}), do: callp(event)
-  def call(event = %Group{}), do: callp(event)
-  def call(event = %Page{}), do: callp(event)
+  def call(%{__struct__: mod} = event)
+      when mod in [Track, Identify, Screen, Alias, Group, Page] do
+    callp(event)
+  end
 
   # GenServer Callbacks
 
@@ -32,7 +30,7 @@ defmodule Segment.Analytics.Sender do
 
   @impl true
   def handle_cast({:send, event}, client) do
-    Task.start_link(fn -> Segment.Http.call(client, event) end)
+    Task.start_link(fn -> Segment.Http.send(client, event) end)
     {:noreply, client}
   end
 

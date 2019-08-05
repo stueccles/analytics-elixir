@@ -67,7 +67,5 @@ defmodule Segment.Analytics do
     |> call
   end
 
-  defp call(event) do
-    @service.call(event)
-  end
+  defdelegate call(event), to: @service
 end

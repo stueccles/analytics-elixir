@@ -1,4 +1,4 @@
-defmodule Segment.Analytics.AdapterStub do
+defmodule Segment.Http.Stub do
   require Logger
 
   def call(env, _opts) do
@@ -28,7 +28,7 @@ defmodule Segment.Http do
             {Tesla.Adapter.Hackney, [recv_timeout: 30_000]}
 
         false ->
-          {Segment.Analytics.AdapterStub, []}
+          {Segment.Http.Stub, []}
       end
 
     client(api_key, adapter)
@@ -45,10 +45,10 @@ defmodule Segment.Http do
     Tesla.client(middleware, adapter)
   end
 
-  def call(client, events) when is_list(events), do: batch(client, events)
+  def send(client, events) when is_list(events), do: batch(client, events)
 
-  def call(client, event) do
-    case callp(client, event.type, prepare_events(event), @retry_attempts) do
+  def send(client, event) do
+    case make_request(client, event.type, prepare_events(event), @retry_attempts) do
       {:ok, %{status: status}} when status == 200 ->
         :ok
 
@@ -72,7 +72,7 @@ defmodule Segment.Http do
       |> add_if(:context, context)
       |> add_if(:integrations, integrations)
 
-    case callp(client, "batch", data, @retry_attempts) do
+    case make_request(client, "batch", data, @retry_attempts) do
       {:ok, %{status: status}} when status == 200 ->
         :ok
 
@@ -98,7 +98,7 @@ defmodule Segment.Http do
     end
   end
 
-  defp callp(client, url, data, retries) when retries > 0 do
+  defp make_request(client, url, data, retries) when retries > 0 do
     retry with: linear_backoff(@retry_start, 2) |> cap(@retry_expiry) |> Stream.take(retries) do
       Tesla.post(client, url, data)
     after
@@ -108,7 +108,7 @@ defmodule Segment.Http do
     end
   end
 
-  defp callp(client, url, data, _retries) do
+  defp make_request(client, url, data, _retries) do
     Tesla.post(client, url, data)
   end
 

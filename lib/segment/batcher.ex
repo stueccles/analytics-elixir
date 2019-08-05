@@ -19,12 +19,10 @@ defmodule Segment.Analytics.Batcher do
   end
 
   # client
-  def call(event = %Track{}), do: enqueue(event)
-  def call(event = %Identify{}), do: enqueue(event)
-  def call(event = %Screen{}), do: enqueue(event)
-  def call(event = %Alias{}), do: enqueue(event)
-  def call(event = %Group{}), do: enqueue(event)
-  def call(event = %Page{}), do: enqueue(event)
+  def call(%{__struct__: mod} = event)
+      when mod in [Track, Identify, Screen, Alias, Group, Page] do
+    enqueue(event)
+  end
 
   # GenServer Callbacks
 
@@ -44,7 +42,7 @@ defmodule Segment.Analytics.Batcher do
     length = :queue.len(queue)
     {items, queue} = extract_batch(queue, length)
 
-    Segment.Http.batch(client, items)
+    if length(items) > 0, do: Segment.Http.batch(client, items)
 
     schedule_batch_send()
     {:noreply, {client, queue}}
