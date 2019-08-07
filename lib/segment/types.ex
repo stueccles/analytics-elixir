@@ -1,4 +1,5 @@
 defmodule Segment.Analytics.Types do
+  @moduledoc false
   def common_fields do
     [
       :anonymousId,
@@ -12,6 +13,7 @@ defmodule Segment.Analytics.Types do
 end
 
 defmodule Segment.Analytics.Track do
+  @moduledoc false
   @method "track"
 
   defstruct Segment.Analytics.Types.common_fields() ++
@@ -27,6 +29,7 @@ defmodule Segment.Analytics.Track do
 end
 
 defmodule Segment.Analytics.Identify do
+  @moduledoc false
   @method "identify"
 
   defstruct Segment.Analytics.Types.common_fields() ++
@@ -41,6 +44,7 @@ defmodule Segment.Analytics.Identify do
 end
 
 defmodule Segment.Analytics.Alias do
+  @moduledoc false
   @method "alias"
 
   defstruct Segment.Analytics.Types.common_fields() ++
@@ -55,6 +59,7 @@ defmodule Segment.Analytics.Alias do
 end
 
 defmodule Segment.Analytics.Page do
+  @moduledoc false
   @method "page"
 
   defstruct Segment.Analytics.Types.common_fields() ++
@@ -70,6 +75,7 @@ defmodule Segment.Analytics.Page do
 end
 
 defmodule Segment.Analytics.Screen do
+  @moduledoc false
   @method "screen"
 
   defstruct Segment.Analytics.Types.common_fields() ++
@@ -85,6 +91,7 @@ defmodule Segment.Analytics.Screen do
 end
 
 defmodule Segment.Analytics.Group do
+  @moduledoc false
   @method "group"
 
   defstruct Segment.Analytics.Types.common_fields() ++
@@ -100,6 +107,7 @@ defmodule Segment.Analytics.Group do
 end
 
 defmodule Segment.Analytics.Context do
+  @moduledoc false
   @library_name Mix.Project.get().project[:description]
   @library_version Mix.Project.get().project[:version]
 

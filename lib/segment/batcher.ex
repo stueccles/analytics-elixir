@@ -1,5 +1,25 @@
 defmodule Segment.Analytics.Batcher do
   @moduledoc """
+    The `Segment.Analytics.Batcher` module is the default service implementation for the library which uses the
+    (Segment Batch HTTP API)[https://segment.com/docs/sources/server/http/#batch] to put events in a FIFO queue and
+    send on a regular basis.
+
+    Because the queue works as a FIFO basis you can be sure of ordering as long as only a single GenServer is running. If you have multiple processes
+    though they won't be ordered globally (obvs)
+
+    The `Segment.Analytics.Batcher` can be configured with
+    ```
+    config :segment,
+      max_batch_size: 100,
+      batch_every_ms: 5000
+    ```
+    * `config :segment, :max_batch_size` The maximum batch size of messages that will be sent to Segment at one time. Default value is 100.
+    * `config :segment, :batch_every_ms` The time (in ms) between every batch request. Default value is 2000 (2 seconds)
+
+    The Segment Batch API does have limits on the batch size "There is a maximum of 500KB per batch request and 32KB per call.". While
+    the library doesn't check the size of the batch, if this becomes a problem you can change `max_batch_size` to a lower number and probably want
+    to change `batch_every_ms` to run more frequently. The Segment API asks you to limit calls to under 50 a second, so even if you have no other
+    Segment calls going on, don't go under 20ms!
 
   """
   use GenServer
@@ -8,17 +28,28 @@ defmodule Segment.Analytics.Batcher do
   @max_batch_size Application.get_env(:segment, :max_batch_size, 100)
   @batch_every_ms Application.get_env(:segment, :batch_every_ms, 2000)
 
+  @doc """
+    Start the `Segment.Analytics.Batcher` GenServer with an Segment HTTP Source API Write Key
+  """
   def start_link(api_key) do
     client = Segment.Http.client(api_key)
     GenServer.start_link(__MODULE__, {client, :queue.new()}, name: __MODULE__)
   end
 
+  @doc """
+    Start the `Segment.Analytics.Batcher` GenServer with an Segment HTTP Source API Write Key and a Tesla Adapter. This is mainly used
+    for testing purposes to override the Adapter with a Mock.
+  """
   def start_link(api_key, adapter) do
     client = Segment.Http.client(api_key, adapter)
     GenServer.start_link(__MODULE__, {client, :queue.new()}, name: __MODULE__)
   end
 
   # client
+  @doc """
+    Make a call to Segment with an event. Should be of type `Track, Identify, Screen, Alias, Group or Page`.
+    This event will be queued and sent later in a batch.
+  """
   def call(%{__struct__: mod} = event)
       when mod in [Track, Identify, Screen, Alias, Group, Page] do
     enqueue(event)

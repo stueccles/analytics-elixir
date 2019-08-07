@@ -18,7 +18,7 @@ end
 
 ## Documentation
 
-Documentation can be be found at [https://hexdocs.pm/okta_api](https://hexdocs.pm/okta_api). 
+Documentation can be be found at [https://hexdocs.pm/segment](https://hexdocs.pm/segment). 
 
 ## Usage
 
@@ -27,8 +27,13 @@ Start the Segment agent with your write_key from Segment for a HTTP API Server S
 Segment.start_link("YOUR_WRITE_KEY")
 ```
 There are then two ways to call the different methods on the API.
-A basic way through `Segment.Analytics` or by passing a full Struct
-with all the data for the API (allowing Context and Integrations to be set manually).
+A basic way through `Segment.Analytics` functions with either the full event Struct
+or some helper methods (also allowing Context and Integrations to be set manually).
+
+This way will use the defined GenServer implementation such as `Segment.Analytics.Batcher` which will 
+queue and batch events to Segment.
+
+The other way is to drop down lower and use `Segment.Http` `send` and `batch` directly. This will require first creating a `client` with `Segment.Http.client/1`/`Segment.Http.client/2`
 
 ### Track
 ```
