@@ -145,7 +145,7 @@ defmodule Segment do
   ```
   3. Start the Segment GenServer in the supervised children list. In `application.ex` add to the children list:
   ```elixir
-  {Segment, Application.get_env(:segment, :write_key)}
+  worker(Segment, [Application.get_env(:segment, :write_key)])
   ```
   """
   @type segment_event ::
