@@ -32,8 +32,7 @@ defmodule SegmentTest do
 
     Segment.Analytics.page("user1", "page debugging #{elem(:os.timestamp(), 2)}")
 
-    # wait 5 seconds for batcher
-    Process.sleep(5000)
+    Segment.Analytics.Batcher.flush()
   end
 
   defp wait_random(n \\ 1000), do: Process.sleep(:rand.uniform(n))

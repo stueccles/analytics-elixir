@@ -5,7 +5,7 @@ defmodule Segment.Analytics.Batcher do
     send on a regular basis.
 
     The `Segment.Analytics.Batcher` can be configured with
-    ```
+    ```elixir
     config :segment,
       max_batch_size: 100,
       batch_every_ms: 5000
@@ -55,6 +55,14 @@ defmodule Segment.Analytics.Batcher do
     enqueue(event)
   end
 
+  @doc """
+    Force the batcher to flush the queue and send all the events as a big batch (warning could exceed batch size)
+  """
+  @spec flush() :: :ok
+  def flush() do
+    GenServer.call(__MODULE__, :flush)
+  end
+
   # GenServer Callbacks
 
   @impl true
@@ -66,6 +74,13 @@ defmodule Segment.Analytics.Batcher do
   @impl true
   def handle_cast({:enqueue, event}, {client, queue}) do
     {:noreply, {client, :queue.in(event, queue)}}
+  end
+
+  @impl true
+  def handle_call(:flush, _from, {client, queue}) do
+    items = :queue.to_list(queue)
+    if length(items) > 0, do: Segment.Http.batch(client, items)
+    {:reply, :ok, {client, :queue.new()}}
   end
 
   @impl true

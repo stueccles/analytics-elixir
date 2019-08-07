@@ -3,7 +3,7 @@ defmodule Segment.Analytics do
     The `Segment.Analytics` module is the easiest way to send Segment events and provides convenience methods for `track`, `identify,` `screen`, `alias`, `group`, and `page` calls
 
     The functions will then delegate the call to the configured service implementation which can be changed with:
-    ```
+    ```elixir
     config :segment, sender_impl: Segment.Analytics.Batcher,
     ```
     By default (if no configuration is given) it will use `Segment.Analytics.Batcher` to send events in a batch periodically

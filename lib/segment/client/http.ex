@@ -15,7 +15,7 @@ defmodule Segment.Http do
   `Segment.Http` is the underlying implementation for making calls to the Segment HTTP API.
 
   The `send/2` and `batch/4` methods can be used for sending events or batches of events to the API.  The sending can be configured with
-  ```
+  ```elixir
   config :segment,
   send_to_http: true
   retry_attempts: 3,
