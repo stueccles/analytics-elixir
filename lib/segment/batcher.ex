@@ -1,7 +1,7 @@
 defmodule Segment.Analytics.Batcher do
   @moduledoc """
     The `Segment.Analytics.Batcher` module is the default service implementation for the library which uses the
-    (Segment Batch HTTP API)[https://segment.com/docs/sources/server/http/#batch] to put events in a FIFO queue and
+    [Segment Batch HTTP API](https://segment.com/docs/sources/server/http/#batch) to put events in a FIFO queue and
     send on a regular basis.
 
     The `Segment.Analytics.Batcher` can be configured with

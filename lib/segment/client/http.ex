@@ -111,7 +111,7 @@ defmodule Segment.Http do
     Send a list of Segment events as a batch.
 
     The `batch` function takes optional arguments for context and integrations which can
-    be applied to the entire batch of events. See (Segments docs)[https://segment.com/docs/sources/server/http/#batch]
+    be applied to the entire batch of events. See [Segment's docs](https://segment.com/docs/sources/server/http/#batch)
   """
   @spec batch(String.t(), list(Segment.segment_event()), map(), map()) :: :ok | :error
   def batch(client, events, context \\ nil, integrations \\ nil) do
