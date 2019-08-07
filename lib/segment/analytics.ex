@@ -10,7 +10,18 @@ defmodule Segment.Analytics do
   """
   alias Segment.Analytics.{Track, Identify, Screen, Context, Alias, Group, Page}
 
+  @type segment_id :: String.t() | integer()
+
   @service Application.get_env(:segment, :sender_impl, Segment.Analytics.Batcher)
+
+  @doc """
+    Make a call to Segment with an event. Should be of type `Track, Identify, Screen, Alias, Group or Page`
+  """
+  @spec send(Segment.segment_event()) :: :ok
+  def send(%{__struct__: mod} = event)
+      when mod in [Track, Identify, Screen, Alias, Group, Page] do
+    call(event)
+  end
 
   @doc """
     `track` lets you record the actions your users perform. Every action triggers what Segment call an “event”, which can also have associated properties as defined in the
@@ -18,6 +29,7 @@ defmodule Segment.Analytics do
 
     See (https://segment.com/docs/spec/track/)[https://segment.com/docs/spec/track/]
   """
+  @spec track(Segment.Analytics.Track.t()) :: :ok
   def track(t = %Track{}) do
     call(t)
   end
@@ -28,6 +40,7 @@ defmodule Segment.Analytics do
 
     See (https://segment.com/docs/spec/track/)[https://segment.com/docs/spec/track/]
   """
+  @spec track(segment_id(), String.t(), map(), Segment.Analytics.Context.t()) :: :ok
   def track(user_id, event_name, properties \\ %{}, context \\ Context.new()) do
     %Track{
       userId: user_id,
@@ -44,6 +57,7 @@ defmodule Segment.Analytics do
 
     See (https://segment.com/docs/spec/identify/)[https://segment.com/docs/spec/identify/]
   """
+  @spec identify(Segment.Analytics.Identify.t()) :: :ok
   def identify(i = %Identify{}) do
     call(i)
   end
@@ -53,6 +67,7 @@ defmodule Segment.Analytics do
 
   See (https://segment.com/docs/spec/identify/)[https://segment.com/docs/spec/identify/]
   """
+  @spec identify(segment_id(), map(), Segment.Analytics.Context.t()) :: :ok
   def identify(user_id, traits \\ %{}, context \\ Context.new()) do
     %Identify{userId: user_id, traits: traits, context: context}
     |> call
@@ -64,6 +79,7 @@ defmodule Segment.Analytics do
 
   See (https://segment.com/docs/spec/screen/)[https://segment.com/docs/spec/screen/]
   """
+  @spec screen(Segment.Analytics.Screen.t()) :: :ok
   def screen(s = %Screen{}) do
     call(s)
   end
@@ -73,6 +89,7 @@ defmodule Segment.Analytics do
 
   See (https://segment.com/docs/spec/screen/)[https://segment.com/docs/spec/screen/]
   """
+  @spec screen(segment_id(), String.t(), map(), Segment.Analytics.Context.t()) :: :ok
   def screen(user_id, screen_name \\ "", properties \\ %{}, context \\ Context.new()) do
     %Screen{
       userId: user_id,
@@ -88,6 +105,7 @@ defmodule Segment.Analytics do
 
   See (https://segment.com/docs/spec/alias/)[https://segment.com/docs/spec/alias/]
   """
+  @spec alias(Segment.Analytics.Alias.t()) :: :ok
   def alias(a = %Alias{}) do
     call(a)
   end
@@ -97,6 +115,7 @@ defmodule Segment.Analytics do
 
   See (https://segment.com/docs/spec/alias/)[https://segment.com/docs/spec/alias/]
   """
+  @spec alias(segment_id(), segment_id(), Segment.Analytics.Context.t()) :: :ok
   def alias(user_id, previous_id, context \\ Context.new()) do
     %Alias{userId: user_id, previousId: previous_id, context: context}
     |> call
@@ -107,6 +126,7 @@ defmodule Segment.Analytics do
 
   See (https://segment.com/docs/spec/group/)[https://segment.com/docs/spec/group/]
   """
+  @spec group(Segment.Analytics.Group.t()) :: :ok
   def group(g = %Group{}) do
     call(g)
   end
@@ -117,6 +137,7 @@ defmodule Segment.Analytics do
 
   See (https://segment.com/docs/spec/group/)[https://segment.com/docs/spec/group/]
   """
+  @spec group(segment_id(), segment_id(), map(), Segment.Analytics.Context.t()) :: :ok
   def group(user_id, group_id, traits \\ %{}, context \\ Context.new()) do
     %Group{userId: user_id, groupId: group_id, traits: traits, context: context}
     |> call
@@ -127,6 +148,7 @@ defmodule Segment.Analytics do
 
   See (https://segment.com/docs/spec/page/)[https://segment.com/docs/spec/page/]
   """
+  @spec page(Segment.Analytics.Page.t()) :: :ok
   def page(p = %Page{}) do
     call(p)
   end
@@ -136,10 +158,12 @@ defmodule Segment.Analytics do
 
   See (https://segment.com/docs/spec/page/)[https://segment.com/docs/spec/page/]
   """
+  @spec page(segment_id(), String.t(), map(), Segment.Analytics.Context.t()) :: :ok
   def page(user_id, page_name \\ "", properties \\ %{}, context \\ Context.new()) do
     %Page{userId: user_id, name: page_name, properties: properties, context: context}
     |> call
   end
 
+  @spec call(Segment.segment_event()) :: :ok
   defdelegate call(event), to: @service
 end

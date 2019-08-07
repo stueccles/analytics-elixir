@@ -12,6 +12,7 @@ defmodule Segment.Analytics.Sender do
   @doc """
     Start the `Segment.Analytics.Sender` GenServer with an Segment HTTP Source API Write Key
   """
+  @spec start_link(String.t()) :: GenServer.on_start()
   def start_link(api_key) do
     client = Segment.Http.client(api_key)
     GenServer.start_link(__MODULE__, client, name: __MODULE__)
@@ -21,6 +22,7 @@ defmodule Segment.Analytics.Sender do
     Start the `Segment.Analytics.Sender` GenServer with an Segment HTTP Source API Write Key and a Tesla Adapter. This is mainly used
     for testing purposes to override the Adapter with a Mock.
   """
+  @spec start_link(String.t(), Tesla.adapter()) :: GenServer.on_start()
   def start_link(api_key, adapter) do
     client = Segment.Http.client(api_key, adapter)
     GenServer.start_link(__MODULE__, {client, :queue.new()}, name: __MODULE__)
@@ -31,6 +33,7 @@ defmodule Segment.Analytics.Sender do
     Make a call to Segment with an event. Should be of type `Track, Identify, Screen, Alias, Group or Page`.
     This event will be sent immediately and asyncronously
   """
+  @spec call(Segment.segment_event()) :: :ok
   def call(%{__struct__: mod} = event)
       when mod in [Track, Identify, Screen, Alias, Group, Page] do
     callp(event)

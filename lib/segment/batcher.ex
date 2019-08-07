@@ -4,9 +4,6 @@ defmodule Segment.Analytics.Batcher do
     (Segment Batch HTTP API)[https://segment.com/docs/sources/server/http/#batch] to put events in a FIFO queue and
     send on a regular basis.
 
-    Because the queue works as a FIFO basis you can be sure of ordering as long as only a single GenServer is running. If you have multiple processes
-    though they won't be ordered globally (obvs)
-
     The `Segment.Analytics.Batcher` can be configured with
     ```
     config :segment,
@@ -31,6 +28,7 @@ defmodule Segment.Analytics.Batcher do
   @doc """
     Start the `Segment.Analytics.Batcher` GenServer with an Segment HTTP Source API Write Key
   """
+  @spec start_link(String.t()) :: GenServer.on_start()
   def start_link(api_key) do
     client = Segment.Http.client(api_key)
     GenServer.start_link(__MODULE__, {client, :queue.new()}, name: __MODULE__)
@@ -40,6 +38,7 @@ defmodule Segment.Analytics.Batcher do
     Start the `Segment.Analytics.Batcher` GenServer with an Segment HTTP Source API Write Key and a Tesla Adapter. This is mainly used
     for testing purposes to override the Adapter with a Mock.
   """
+  @spec start_link(String.t(), Tesla.adapter()) :: GenServer.on_start()
   def start_link(api_key, adapter) do
     client = Segment.Http.client(api_key, adapter)
     GenServer.start_link(__MODULE__, {client, :queue.new()}, name: __MODULE__)
@@ -50,6 +49,7 @@ defmodule Segment.Analytics.Batcher do
     Make a call to Segment with an event. Should be of type `Track, Identify, Screen, Alias, Group or Page`.
     This event will be queued and sent later in a batch.
   """
+  @spec call(Segment.segment_event()) :: :ok
   def call(%{__struct__: mod} = event)
       when mod in [Track, Identify, Screen, Alias, Group, Page] do
     enqueue(event)

@@ -158,7 +158,13 @@ defmodule Segment do
   worker(Segment, [Application.get_env(:segment, :write_key)])
   ```
   """
-  @type adapter :: Tesla.adapter()
+  @type segment_event ::
+          Segment.Analytics.Track.t()
+          | Segment.Analytics.Identify.t()
+          | Segment.Analytics.Screen.t()
+          | Segment.Analytics.Alias.t()
+          | Segment.Analytics.Group.t()
+          | Segment.Analytics.Page.t()
   require Logger
   @service Application.get_env(:segment, :sender_impl, Segment.Analytics.Batcher)
 
@@ -177,7 +183,7 @@ defmodule Segment do
 
   By default if nothing is configured it will start `Segment.Analytics.Batcher`
   """
-  @spec start_link(String.t(), adapter()) :: GenServer.on_start()
+  @spec start_link(String.t(), Telsa.adapter()) :: GenServer.on_start()
   def start_link(api_key, adapter) do
     @service.start_link(api_key, adapter)
   end
