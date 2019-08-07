@@ -187,8 +187,10 @@ defmodule Segment.Http do
   defp prep_context(map),
     do: Map.put_new(map, :context, map_content(Segment.Analytics.Context.new()))
 
-  defp map_content(%Segment.Analytics.Context{} = context), do: Map.from_struct(context)
-  defp map_content(context) when is_map(context), do: context
+  defp map_content(%Segment.Analytics.Context{} = context),
+    do: Map.from_struct(context) |> drop_nils
+
+  defp map_content(context) when is_map(context), do: context |> drop_nils
 
   defp add_sent_at(%{sentAt: nil} = map), do: Map.put(map, :sentAt, DateTime.utc_now())
   defp add_sent_at(map), do: Map.put_new(map, :sentAt, DateTime.utc_now())
