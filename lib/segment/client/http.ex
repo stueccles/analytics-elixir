@@ -163,10 +163,12 @@ defmodule Segment.Http do
   defp prepare_events(items) when is_list(items), do: Enum.map(items, &prepare_events/1)
 
   defp prepare_events(item) do
-    Map.from_struct(item)
+    item
+    |> Map.from_struct()
     |> prep_context()
     |> add_sent_at()
     |> drop_nils()
+    |> add_timestamp()
   end
 
   defp drop_nils(map) do
@@ -192,6 +194,8 @@ defmodule Segment.Http do
 
   defp add_sent_at(%{sentAt: nil} = map), do: Map.put(map, :sentAt, DateTime.utc_now())
   defp add_sent_at(map), do: Map.put_new(map, :sentAt, DateTime.utc_now())
+
+  defp add_timestamp(map), do: Map.put_new(map, :timestamp, map[:sentAt])
 
   defp add_if(map, _key, nil), do: map
   defp add_if(map, key, value), do: Map.put_new(map, key, value)
