@@ -15,6 +15,7 @@ end
 defmodule Segment.Analytics.Track do
   @moduledoc false
   @method "track"
+  @derive {AnalyticsFields, only: [:add_properties]}
 
   defstruct Segment.Analytics.Types.common_fields() ++
               [
@@ -31,6 +32,7 @@ end
 defmodule Segment.Analytics.Identify do
   @moduledoc false
   @method "identify"
+  @derive {AnalyticsFields, only: [:add_traits]}
 
   defstruct Segment.Analytics.Types.common_fields() ++
               [
@@ -46,6 +48,7 @@ end
 defmodule Segment.Analytics.Alias do
   @moduledoc false
   @method "alias"
+  @derive {AnalyticsFields, only: [:add_previous_id]}
 
   defstruct Segment.Analytics.Types.common_fields() ++
               [
@@ -61,6 +64,7 @@ end
 defmodule Segment.Analytics.Page do
   @moduledoc false
   @method "page"
+  @derive {AnalyticsFields, only: [:add_properties]}
 
   defstruct Segment.Analytics.Types.common_fields() ++
               [
@@ -77,6 +81,7 @@ end
 defmodule Segment.Analytics.Screen do
   @moduledoc false
   @method "screen"
+  @derive {AnalyticsFields, only: [:add_properties]}
 
   defstruct Segment.Analytics.Types.common_fields() ++
               [
@@ -93,6 +98,7 @@ end
 defmodule Segment.Analytics.Group do
   @moduledoc false
   @method "group"
+  @derive {AnalyticsFields, only: [:add_traits, :add_group_id]}
 
   defstruct Segment.Analytics.Types.common_fields() ++
               [
