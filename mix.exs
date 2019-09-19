@@ -4,7 +4,7 @@ defmodule AnalyticsElixir.Mixfile do
   def project do
     [
       app: :segment,
-      version: "0.2.0",
+      version: "0.2.1",
       elixir: "~> 1.0",
       deps: deps(),
       description: "analytics_elixir",
@@ -16,10 +16,10 @@ defmodule AnalyticsElixir.Mixfile do
   #
   # Type `mix help compile.app` for more information
   def application do
-    [applications: [:hackney, :logger, :retry]]
+    [applications: [:hackney, :logger, :retry, :tesla, :jason]]
   end
 
-  # Dependencies can be Hex packages:
+  # Dependencies can be Hex package
   #
   #   {:mydep, "~> 0.3.0"}
   #
