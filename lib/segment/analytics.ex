@@ -154,7 +154,7 @@ defmodule Segment.Analytics do
   end
 
   @doc """
-  The `page` call lets you record whenever a user sees a page of your website. `page/4` takes a `user_id` and an optional `page_name`, optional `properties and an optional `Segment.Analytics.Context` struct.
+  The `page` call lets you record whenever a user sees a page of your website. `page/4` takes a `user_id` and an optional `page_name`, optional `properties` and an optional `Segment.Analytics.Context` struct.
 
   See [https://segment.com/docs/spec/page/](https://segment.com/docs/spec/page/)
   """

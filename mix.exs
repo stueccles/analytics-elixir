@@ -4,7 +4,7 @@ defmodule AnalyticsElixir.Mixfile do
   def project do
     [
       app: :segment,
-      version: "0.2.1",
+      version: "0.2.2",
       elixir: "~> 1.0",
       deps: deps(),
       description: "analytics_elixir",
@@ -31,8 +31,8 @@ defmodule AnalyticsElixir.Mixfile do
   defp deps do
     [
       {:ex_doc, "~> 0.21", only: :dev, runtime: false},
-      {:tesla, "~> 1.2.0"},
-      {:hackney, "~> 1.14.0"},
+      {:tesla, "~> 1.2"},
+      {:hackney, "~> 1.15"},
       {:jason, ">= 1.0.0"},
       {:retry, "~> 0.13"},
       {:mox, "~> 0.5", only: :test}
