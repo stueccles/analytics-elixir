@@ -22,9 +22,6 @@ defmodule Segment.Analytics.Batcher do
   use GenServer
   alias Segment.Analytics.{Track, Identify, Screen, Alias, Group, Page}
 
-  @max_batch_size Application.get_env(:segment, :max_batch_size, 100)
-  @batch_every_ms Application.get_env(:segment, :batch_every_ms, 2000)
-
   @doc """
     Start the `Segment.Analytics.Batcher` GenServer with an Segment HTTP Source API Write Key
   """
@@ -96,7 +93,7 @@ defmodule Segment.Analytics.Batcher do
 
   # Helpers
   defp schedule_batch_send do
-    Process.send_after(self(), :process_batch, @batch_every_ms)
+    Process.send_after(self(), :process_batch, Segment.Config.batch_every_ms())
   end
 
   defp enqueue(event) do
@@ -106,13 +103,16 @@ defmodule Segment.Analytics.Batcher do
   defp extract_batch(queue, 0),
     do: {[], queue}
 
-  defp extract_batch(queue, length) when length >= @max_batch_size do
-    :queue.split(@max_batch_size, queue)
-    |> split_result()
-  end
+  defp extract_batch(queue, length) do
+    max_batch_size = Segment.Config.max_batch_size()
 
-  defp extract_batch(queue, length),
-    do: :queue.split(length, queue) |> split_result()
+    if length >= max_batch_size do
+      :queue.split(max_batch_size, queue)
+      |> split_result()
+    else
+      :queue.split(length, queue) |> split_result()
+    end
+  end
 
   defp split_result({q1, q2}), do: {:queue.to_list(q1), q2}
 end

@@ -12,8 +12,6 @@ defmodule Segment.Analytics do
 
   @type segment_id :: String.t() | integer()
 
-  @service Application.get_env(:segment, :sender_impl, Segment.Analytics.Batcher)
-
   @doc """
     Make a call to Segment with an event. Should be of type `Track, Identify, Screen, Alias, Group or Page`
   """
@@ -165,5 +163,7 @@ defmodule Segment.Analytics do
   end
 
   @spec call(Segment.segment_event()) :: :ok
-  defdelegate call(event), to: @service
+  def call(event) do
+    Segment.Config.service().call(event)
+  end
 end
