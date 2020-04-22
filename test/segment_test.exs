@@ -1,10 +1,8 @@
 defmodule SegmentTest do
   use ExUnit.Case
 
-  @segment_test_key System.get_env("SEGMENT_KEY")
-
   test "track debugging" do
-    Segment.start_link(@segment_test_key)
+    Segment.start_link(System.get_env("SEGMENT_KEY"))
 
     Segment.Analytics.track("user1", "track debugging #{elem(:os.timestamp(), 2)}")
 
