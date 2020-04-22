@@ -155,8 +155,6 @@ defmodule Segment do
           | Segment.Analytics.Alias.t()
           | Segment.Analytics.Group.t()
           | Segment.Analytics.Page.t()
-  require Logger
-  @service Application.get_env(:segment, :sender_impl, Segment.Analytics.Batcher)
 
   @doc """
   Start the configured GenServer for handling Segment events with the Segment HTTP Source API Write Key
@@ -164,7 +162,9 @@ defmodule Segment do
   By default if nothing is configured it will start `Segment.Analytics.Batcher`
   """
   @spec start_link(String.t()) :: GenServer.on_start()
-  defdelegate start_link(api_key), to: @service
+  def start_link(api_key) do
+    Segment.Config.service().start_link(api_key)
+  end
 
   @doc """
   Start the configured GenServer for handling Segment events with the Segment HTTP Source API Write Key and a custom Tesla Adapter.
@@ -172,8 +172,12 @@ defmodule Segment do
   By default if nothing is configured it will start `Segment.Analytics.Batcher`
   """
   @spec start_link(String.t(), Telsa.adapter()) :: GenServer.on_start()
-  defdelegate start_link(api_key, adapter), to: @service
+  def start_link(api_key, adapter) do
+    Segment.Config.service().start_link(api_key, adapter)
+  end
 
   @spec child_spec(map()) :: map()
-  defdelegate child_spec(opts), to: @service
+  def child_spec(opts) do
+    Segment.Config.service().child_spec(opts)
+  end
 end
