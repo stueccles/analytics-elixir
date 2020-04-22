@@ -41,10 +41,6 @@ defmodule Segment.Http do
   use Retry
 
   @segment_api_url "https://api.segment.io/v1/"
-  @send_to_http Application.get_env(:segment, :send_to_http, true)
-  @retry_attempts Application.get_env(:segment, :retry_attempts, 3)
-  @retry_expiry Application.get_env(:segment, :retry_expiry, 10_000)
-  @retry_start Application.get_env(:segment, :retry_start, 100)
 
   @doc """
     Create a Tesla client with the Segment Source Write API Key
@@ -52,7 +48,7 @@ defmodule Segment.Http do
   @spec client(String.t()) :: client()
   def client(api_key) do
     adapter =
-      case @send_to_http do
+      case Segment.Config.send_to_http() do
         true ->
           Application.get_env(:segment, :tesla)[:adapter] ||
             {Tesla.Adapter.Hackney, [recv_timeout: 30_000]}
@@ -89,7 +85,7 @@ defmodule Segment.Http do
   """
   @spec send(String.t(), Segment.segment_event()) :: :ok | :error
   def send(client, event) do
-    case make_request(client, event.type, prepare_events(event), @retry_attempts) do
+    case make_request(client, event.type, prepare_events(event), Segment.Config.retry_attempts()) do
       {:ok, %{status: status}} when status == 200 ->
         :ok
 
@@ -98,7 +94,10 @@ defmodule Segment.Http do
         :error
 
       {:error, err} ->
-        Logger.error("[Segment] Call Failed after #{@retry_attempts} retries. #{inspect(err)}")
+        Logger.error(
+          "[Segment] Call Failed after #{Segment.Config.retry_attempts()} retries. #{inspect(err)}"
+        )
+
         :error
 
       err ->
@@ -120,7 +119,7 @@ defmodule Segment.Http do
       |> add_if(:context, context)
       |> add_if(:integrations, integrations)
 
-    case make_request(client, "batch", data, @retry_attempts) do
+    case make_request(client, "batch", data, Segment.Config.retry_attempts()) do
       {:ok, %{status: status}} when status == 200 ->
         :ok
 
@@ -133,9 +132,9 @@ defmodule Segment.Http do
 
       {:error, err} ->
         Logger.error(
-          "[Segment] Batch call of #{length(events)} events failed after #{@retry_attempts} retries. #{
-            inspect(err)
-          }"
+          "[Segment] Batch call of #{length(events)} events failed after #{
+            Segment.Config.retry_attempts()
+          } retries. #{inspect(err)}"
         )
 
         :error
@@ -147,7 +146,10 @@ defmodule Segment.Http do
   end
 
   defp make_request(client, url, data, retries) when retries > 0 do
-    retry with: linear_backoff(@retry_start, 2) |> cap(@retry_expiry) |> Stream.take(retries) do
+    retry with:
+            linear_backoff(Segment.Config.retry_start(), 2)
+            |> cap(Segment.Config.retry_expiry())
+            |> Stream.take(retries) do
       Tesla.post(client, url, data)
     after
       result -> result
