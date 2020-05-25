@@ -130,6 +130,7 @@ defmodule Segment do
   * `config :segment, :retry_start` The time (in ms) to start the first retry. Default value is 100
   * `config :segment, :send_to_http` If set to `false`, the libray will override the Tesla Adapter implementation to only log segment calls to `debug` but not make any actual API calls. This can be useful if you want to switch off Segment for test or dev. Default value is true
   * `config :segment, :tesla, :adapter` This config option allows for overriding the HTTP Adapter for Tesla (which the library defaults to Hackney).This can be useful if you prefer something else, or want to mock the adapter for testing.
+  * `config :segment, :enable` This config option allows is defaulted to true. You can set it to false, in oder to turn off segment for environments that you do not desire to track.
 
   ## Usage in Phoenix
 

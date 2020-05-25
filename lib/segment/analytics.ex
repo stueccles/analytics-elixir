@@ -164,6 +164,6 @@ defmodule Segment.Analytics do
 
   @spec call(Segment.segment_event()) :: :ok
   def call(event) do
-    Segment.Config.service().call(event)
+    if Segment.Config.enabled?, do: Segment.Config.service().call(event), else: :ok
   end
 end

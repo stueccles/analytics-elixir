@@ -28,4 +28,8 @@ defmodule Segment.Config do
   def retry_start() do
     Application.get_env(:segment, :retry_start, 100)
   end
+
+  def enabled?() do
+    Application.get_env(:segment, :enable, true)
+  end
 end
