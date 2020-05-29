@@ -15,10 +15,10 @@ defmodule Segment.Analytics do
   @doc """
     Make a call to Segment with an event. Should be of type `Track, Identify, Screen, Alias, Group or Page`
   """
-  @spec send(Segment.segment_event()) :: :ok
-  def send(%{__struct__: mod} = event)
+  @spec send(Segment.segment_event(), pid() | nil) :: :ok
+  def send(%{__struct__: mod} = event, pid \\ nil)
       when mod in [Track, Identify, Screen, Alias, Group, Page] do
-    call(event)
+    call(event, pid)
   end
 
   @doc """
@@ -27,10 +27,8 @@ defmodule Segment.Analytics do
 
     See [https://segment.com/docs/spec/track/](https://segment.com/docs/spec/track/)
   """
-  @spec track(Segment.Analytics.Track.t()) :: :ok
-  def track(t = %Track{}) do
-    call(t)
-  end
+  @spec track(Segment.Analytics.Track.t(), pid() | nil) :: :ok
+  def track(t = %Track{}, pid \\ nil), do: call(t, pid)
 
   @doc """
     `track` lets you record the actions your users perform. Every action triggers what Segment call an “event”, which can also have associated properties. `track/4` takes a `user_id`, an
@@ -38,15 +36,16 @@ defmodule Segment.Analytics do
 
     See [https://segment.com/docs/spec/track/](https://segment.com/docs/spec/track/)
   """
-  @spec track(segment_id(), String.t(), map(), Segment.Analytics.Context.t()) :: :ok
-  def track(user_id, event_name, properties \\ %{}, context \\ Context.new()) do
+  @spec track(segment_id(), String.t(), map(), Segment.Analytics.Context.t(), pid() | nil) :: :ok
+  def track(user_id, event_name, properties, context \\ Context.new(), pid \\ nil)
+      when is_bitstring(event_name) do
     %Track{
       userId: user_id,
       event: event_name,
       properties: properties,
       context: context
     }
-    |> call
+    |> call(pid)
   end
 
   @doc """
@@ -55,20 +54,18 @@ defmodule Segment.Analytics do
 
     See [https://segment.com/docs/spec/identify/](https://segment.com/docs/spec/identify/)
   """
-  @spec identify(Segment.Analytics.Identify.t()) :: :ok
-  def identify(i = %Identify{}) do
-    call(i)
-  end
+  @spec identify(Segment.Analytics.Identify.t(), pid() | nil) :: :ok
+  def identify(i = %Identify{}, pid \\ nil), do: call(i, pid)
 
   @doc """
   `identify` lets you tie a user to their actions and record traits about them. `identify/3` takes a `user_id`, optional additional `traits` and an optional `Segment.Analytics.Context` struct.
 
   See [https://segment.com/docs/spec/identify/](https://segment.com/docs/spec/identify/)
   """
-  @spec identify(segment_id(), map(), Segment.Analytics.Context.t()) :: :ok
-  def identify(user_id, traits \\ %{}, context \\ Context.new()) do
+  @spec identify(segment_id(), map(), Segment.Analytics.Context.t(), pid() | nil) :: :ok
+  def identify(user_id, traits, context, pid \\ nil) do
     %Identify{userId: user_id, traits: traits, context: context}
-    |> call
+    |> call(pid)
   end
 
   @doc """
@@ -77,25 +74,23 @@ defmodule Segment.Analytics do
 
   See [https://segment.com/docs/spec/screen/](https://segment.com/docs/spec/screen/)
   """
-  @spec screen(Segment.Analytics.Screen.t()) :: :ok
-  def screen(s = %Screen{}) do
-    call(s)
-  end
+  @spec screen(Segment.Analytics.Screen.t(), pid() | nil) :: :ok
+  def screen(s = %Screen{}, pid \\ nil), do: call(s, pid)
 
   @doc """
   `screen` let you record whenever a user sees a screen of your mobile app. `screen/4` takes a `user_id`, an optional `screen_name`, optional `properties` and an optional `Segment.Analytics.Context` struct.
 
   See [https://segment.com/docs/spec/screen/](https://segment.com/docs/spec/screen/)
   """
-  @spec screen(segment_id(), String.t(), map(), Segment.Analytics.Context.t()) :: :ok
-  def screen(user_id, screen_name \\ "", properties \\ %{}, context \\ Context.new()) do
+  @spec screen(segment_id(), String.t(), map(), Segment.Analytics.Context.t(), pid() | nil) :: :ok
+  def screen(user_id, screen_name, properties, context \\ Context.new(), pid \\ nil) do
     %Screen{
       userId: user_id,
       name: screen_name,
       properties: properties,
       context: context
     }
-    |> call
+    |> call(pid)
   end
 
   @doc """
@@ -103,20 +98,18 @@ defmodule Segment.Analytics do
 
   See [https://segment.com/docs/spec/alias/](https://segment.com/docs/spec/alias/)
   """
-  @spec alias(Segment.Analytics.Alias.t()) :: :ok
-  def alias(a = %Alias{}) do
-    call(a)
-  end
+  @spec alias(Segment.Analytics.Alias.t(), pid() | nil) :: :ok
+  def alias(a = %Alias{}, pid \\ nil), do: call(a, pid)
 
   @doc """
   `alias` is how you associate one identity with another. `alias/3` takes a `user_id` and a `previous_id` to map from. It also takes an optional `Segment.Analytics.Context` struct.
 
   See [https://segment.com/docs/spec/alias/](https://segment.com/docs/spec/alias/)
   """
-  @spec alias(segment_id(), segment_id(), Segment.Analytics.Context.t()) :: :ok
-  def alias(user_id, previous_id, context \\ Context.new()) do
+  @spec alias(segment_id(), segment_id(), Segment.Analytics.Context.t(), pid() | nil) :: :ok
+  def alias(user_id, previous_id, context, pid \\ nil) do
     %Alias{userId: user_id, previousId: previous_id, context: context}
-    |> call
+    |> call(pid)
   end
 
   @doc """
@@ -124,10 +117,8 @@ defmodule Segment.Analytics do
 
   See [https://segment.com/docs/spec/group/](https://segment.com/docs/spec/group/)
   """
-  @spec group(Segment.Analytics.Group.t()) :: :ok
-  def group(g = %Group{}) do
-    call(g)
-  end
+  @spec group(Segment.Analytics.Group.t(), pid() | nil) :: :ok
+  def group(g = %Group{}, pid \\ nil), do: call(g, pid)
 
   @doc """
   The `group` call is how you associate an individual user with a group. `group/4` takes a `user_id` and a `group_id` to associate it with. It also takes optional `traits` of the group and
@@ -135,10 +126,11 @@ defmodule Segment.Analytics do
 
   See [https://segment.com/docs/spec/group/](https://segment.com/docs/spec/group/)
   """
-  @spec group(segment_id(), segment_id(), map(), Segment.Analytics.Context.t()) :: :ok
-  def group(user_id, group_id, traits \\ %{}, context \\ Context.new()) do
+  @spec group(segment_id(), segment_id(), map(), Segment.Analytics.Context.t(), pid() | nil) ::
+          :ok
+  def group(user_id, group_id, traits, context \\ Context.new(), pid \\ nil) do
     %Group{userId: user_id, groupId: group_id, traits: traits, context: context}
-    |> call
+    |> call(pid)
   end
 
   @doc """
@@ -146,24 +138,21 @@ defmodule Segment.Analytics do
 
   See [https://segment.com/docs/spec/page/](https://segment.com/docs/spec/page/)
   """
-  @spec page(Segment.Analytics.Page.t()) :: :ok
-  def page(p = %Page{}) do
-    call(p)
-  end
+  @spec page(Segment.Analytics.Page.t(), pid() | nil) :: :ok
+  def page(p = %Page{}, pid \\ nil), do: call(p, pid)
 
   @doc """
   The `page` call lets you record whenever a user sees a page of your website. `page/4` takes a `user_id` and an optional `page_name`, optional `properties` and an optional `Segment.Analytics.Context` struct.
 
   See [https://segment.com/docs/spec/page/](https://segment.com/docs/spec/page/)
   """
-  @spec page(segment_id(), String.t(), map(), Segment.Analytics.Context.t()) :: :ok
-  def page(user_id, page_name \\ "", properties \\ %{}, context \\ Context.new()) do
+  @spec page(segment_id(), String.t(), map(), Segment.Analytics.Context.t(), pid() | nil) :: :ok
+  def page(user_id, page_name, properties, context \\ Context.new(), pid \\ nil) do
     %Page{userId: user_id, name: page_name, properties: properties, context: context}
-    |> call
+    |> call(pid)
   end
 
-  @spec call(Segment.segment_event()) :: :ok
-  def call(event) do
-    Segment.Config.service().call(event)
-  end
+  @spec call(Segment.segment_event(), pid() | nil) :: :ok
+  def call(event, nil), do: Segment.Config.service().call(event)
+  def call(event, pid), do: Segment.Config.service().call(event, pid)
 end

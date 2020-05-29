@@ -112,7 +112,7 @@ defmodule Segment.Http do
     The `batch` function takes optional arguments for context and integrations which can
     be applied to the entire batch of events. See [Segment's docs](https://segment.com/docs/sources/server/http/#batch)
   """
-  @spec batch(String.t(), list(Segment.segment_event()), map(), map()) :: :ok | :error
+  @spec batch(String.t(), list(Segment.segment_event()), map() | nil, map() | nil) :: :ok | :error
   def batch(client, events, context \\ nil, integrations \\ nil) do
     data =
       %{batch: prepare_events(events)}

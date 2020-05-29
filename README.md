@@ -1,5 +1,7 @@
 # analytics-elixir
 
+**_This fork intends to give the ability to instantiate more than one Segment Analytics instance. Let's say that a single Application requires to send analytics to more than one Segment Analytics (using different private keys)._**
+
 analytics-elixir is a non-official third-party client for [Segment](https://segment.com). Since version `2.0` it supports
 batch delivery of events and retries for the API.
 
