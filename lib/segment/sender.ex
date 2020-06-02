@@ -33,8 +33,8 @@ defmodule Segment.Analytics.Sender do
     Make a call to Segment with an event. Should be of type `Track, Identify, Screen, Alias, Group or Page`.
     This event will be sent immediately and asyncronously
   """
-  @spec call(Segment.segment_event(), pid() | nil) :: :ok
-  def call(%{__struct__: mod} = event, pid \\ nil)
+  @spec call(Segment.segment_event(), pid() | __MODULE__.t()) :: :ok
+  def call(%{__struct__: mod} = event, pid \\ __MODULE__)
       when mod in [Track, Identify, Screen, Alias, Group, Page] do
     callp(event, pid)
   end
@@ -53,11 +53,5 @@ defmodule Segment.Analytics.Sender do
   end
 
   # Helpers
-  defp callp(event, nil) do
-    GenServer.cast(__MODULE__, {:send, event})
-  end
-
-  defp callp(event, pid) do
-    GenServer.cast(pid, {:send, event})
-  end
+  defp callp(event, pid), do: GenServer.cast(pid, {:send, event})
 end
