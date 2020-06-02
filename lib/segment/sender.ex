@@ -15,7 +15,7 @@ defmodule Segment.Analytics.Sender do
   @spec start_link(String.t()) :: GenServer.on_start()
   def start_link(api_key) do
     client = Segment.Http.client(api_key)
-    GenServer.start_link(__MODULE__, client, name: __MODULE__)
+    GenServer.start_link(__MODULE__, client, name: String.to_atom(api_key))
   end
 
   @doc """
@@ -33,10 +33,10 @@ defmodule Segment.Analytics.Sender do
     Make a call to Segment with an event. Should be of type `Track, Identify, Screen, Alias, Group or Page`.
     This event will be sent immediately and asyncronously
   """
-  @spec call(Segment.segment_event()) :: :ok
-  def call(%{__struct__: mod} = event)
+  @spec call(Segment.segment_event(), pid() | nil) :: :ok
+  def call(%{__struct__: mod} = event, pid \\ nil)
       when mod in [Track, Identify, Screen, Alias, Group, Page] do
-    callp(event)
+    callp(event, pid)
   end
 
   # GenServer Callbacks
@@ -53,7 +53,11 @@ defmodule Segment.Analytics.Sender do
   end
 
   # Helpers
-  defp callp(event) do
+  defp callp(event, nil) do
     GenServer.cast(__MODULE__, {:send, event})
+  end
+
+  defp callp(event, pid) do
+    GenServer.cast(pid, {:send, event})
   end
 end

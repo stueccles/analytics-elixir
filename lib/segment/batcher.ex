@@ -22,13 +22,15 @@ defmodule Segment.Analytics.Batcher do
   use GenServer
   alias Segment.Analytics.{Track, Identify, Screen, Alias, Group, Page}
 
+  require Logger
+
   @doc """
     Start the `Segment.Analytics.Batcher` GenServer with an Segment HTTP Source API Write Key
   """
   @spec start_link(String.t()) :: GenServer.on_start()
   def start_link(api_key) do
     client = Segment.Http.client(api_key)
-    GenServer.start_link(__MODULE__, {client, :queue.new()}, name: __MODULE__)
+    GenServer.start_link(__MODULE__, {client, :queue.new()}, name: String.to_atom(api_key))
   end
 
   @doc """
@@ -96,7 +98,11 @@ defmodule Segment.Analytics.Batcher do
   end
 
   defp enqueue(event, nil), do: GenServer.cast(__MODULE__, {:enqueue, event})
-  defp enqueue(event, pid), do: GenServer.cast(pid, {:enqueue, event})
+
+  defp enqueue(event, pid) do
+    Logger.debug("THIS IS PID: #{inspect(pid)}")
+    GenServer.cast(pid, {:enqueue, event})
+  end
 
   defp extract_batch(queue, 0),
     do: {[], queue}
