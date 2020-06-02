@@ -85,11 +85,8 @@ defmodule Segment.Http do
   """
   @spec send(String.t(), Segment.segment_event()) :: :ok | :error
   def send(client, event) do
-    Logger.debug("#{inspect(client)}   ===   #{inspect(event)}")
-
     case make_request(client, event.type, prepare_events(event), Segment.Config.retry_attempts()) do
-      {:ok, %{status: status} = dd} when status == 200 ->
-        Logger.debug("[SEGMENT] success send #{inspect(dd)}")
+      {:ok, %{status: status}} when status == 200 ->
         :ok
 
       {:ok, %{status: status}} when status == 400 ->
@@ -122,11 +119,8 @@ defmodule Segment.Http do
       |> add_if(:context, context)
       |> add_if(:integrations, integrations)
 
-    Logger.debug("#{inspect(client)}   ===   #{inspect(data)}")
-
     case make_request(client, "batch", data, Segment.Config.retry_attempts()) do
-      {:ok, %{status: status} = dd} when status == 200 ->
-        Logger.debug("[SEGMENT] success batch #{inspect(dd)}")
+      {:ok, %{status: status}} when status == 200 ->
         :ok
 
       {:ok, %{status: status}} when status == 400 ->
