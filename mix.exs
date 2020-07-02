@@ -31,11 +31,11 @@ defmodule AnalyticsElixir.Mixfile do
   defp deps do
     [
       {:ex_doc, "~> 0.21", only: :dev, runtime: false},
-      {:tesla, "~> 1.2"},
       {:hackney, "~> 1.15"},
       {:jason, ">= 1.0.0"},
+      {:mox, "~> 0.5", only: :test},
       {:retry, "~> 0.13"},
-      {:mox, "~> 0.5", only: :test}
+      {:tesla, "~> 1.2"}
     ]
   end
 
