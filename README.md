@@ -177,3 +177,28 @@ There are not many tests at the moment. if you want to run live tests on your ac
 ```
 SEGMENT_KEY=yourkey mix test
 ```
+
+## Telemetry
+
+This package wraps its Segment event sending in [`:telemetry.span/3`][telemetry-span-3]. You can attach to:
+
+- `[:segment, :send, :start]`
+- `[:segment, :send, :stop]`
+- `[:segment, :send, :exception]`
+- `[:segment, :batch, :start]`
+- `[:segment, :batch, :stop]`
+- `[:segment, :batch, :exception]`
+
+The measurements will include, in Erlang's `:native` time unit (likely `:nanosecond`):
+
+- `system_time` with `:start` events
+- `duration` with `:stop` and `:exception` events
+
+The metadata will include:
+
+- the original `event` or `events` with all `:send` and `:batch` events respectively
+- our `status` (`:ok` | `:error`) and Tesla's `result` with all `:stop` events
+- `error` matching `result` when it isn't `{:ok, env}`
+- `kind`, `reason`, and `stacktrace` with `:exception` events
+
+[telemetry-span-3]: https://hexdocs.pm/telemetry/telemetry.html#span-3

@@ -17,7 +17,7 @@ defmodule AnalyticsElixir.Mixfile do
   #
   # Type `mix help compile.app` for more information
   def application do
-    [applications: [:hackney, :logger, :retry, :tesla, :jason]]
+    [applications: [:hackney, :logger, :retry, :tesla, :jason, :telemetry]]
   end
 
   # Dependencies can be Hex package
@@ -37,6 +37,7 @@ defmodule AnalyticsElixir.Mixfile do
       {:jason, ">= 1.0.0"},
       {:mox, "~> 0.5", only: :test},
       {:retry, "~> 0.13"},
+      {:telemetry, "~> 0.4.2"},
       {:tesla, "~> 1.2"}
     ]
   end
