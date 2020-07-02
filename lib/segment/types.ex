@@ -23,6 +23,8 @@ defmodule Segment.Analytics.Track do
                 type: @method
               ]
 
+  @type t :: %__MODULE__{}
+
   def new(attrs) do
     struct(__MODULE__, attrs)
   end
@@ -38,6 +40,8 @@ defmodule Segment.Analytics.Identify do
                 type: @method
               ]
 
+  @type t :: %__MODULE__{}
+
   def new(attrs) do
     struct(__MODULE__, attrs)
   end
@@ -52,6 +56,8 @@ defmodule Segment.Analytics.Alias do
                 :previousId,
                 type: @method
               ]
+
+  @type t :: %__MODULE__{}
 
   def new(attrs) do
     struct(__MODULE__, attrs)
@@ -69,6 +75,8 @@ defmodule Segment.Analytics.Page do
                 type: @method
               ]
 
+  @type t :: %__MODULE__{}
+
   def new(attrs) do
     struct(__MODULE__, attrs)
   end
@@ -85,6 +93,8 @@ defmodule Segment.Analytics.Screen do
                 type: @method
               ]
 
+  @type t :: %__MODULE__{}
+
   def new(attrs) do
     struct(__MODULE__, attrs)
   end
@@ -100,6 +110,8 @@ defmodule Segment.Analytics.Group do
                 :traits,
                 type: @method
               ]
+
+  @type t :: %__MODULE__{}
 
   def new(attrs) do
     struct(__MODULE__, attrs)
@@ -130,6 +142,8 @@ defmodule Segment.Analytics.Context do
     :traits,
     :userAgent
   ]
+
+  @type t :: %__MODULE__{}
 
   def update(context = %__MODULE__{}) do
     %{context | library: %{name: @library_name, version: @library_version}}
