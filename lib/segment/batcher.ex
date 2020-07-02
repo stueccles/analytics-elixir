@@ -35,7 +35,7 @@ defmodule Segment.Analytics.Batcher do
     Start the `Segment.Analytics.Batcher` GenServer with an Segment HTTP Source API Write Key and a Tesla Adapter. This is mainly used
     for testing purposes to override the Adapter with a Mock.
   """
-  @spec start_link(String.t(), Tesla.adapter()) :: GenServer.on_start()
+  @spec start_link(String.t(), Segment.Http.adapter()) :: GenServer.on_start()
   def start_link(api_key, adapter) do
     client = Segment.Http.client(api_key, adapter)
     GenServer.start_link(__MODULE__, {client, :queue.new()}, name: __MODULE__)

@@ -171,7 +171,7 @@ defmodule Segment do
 
   By default if nothing is configured it will start `Segment.Analytics.Batcher`
   """
-  @spec start_link(String.t(), Telsa.adapter()) :: GenServer.on_start()
+  @spec start_link(String.t(), Segment.Http.adapter()) :: GenServer.on_start()
   def start_link(api_key, adapter) do
     Segment.Config.service().start_link(api_key, adapter)
   end

@@ -8,6 +8,7 @@ defmodule AnalyticsElixir.Mixfile do
       elixir: "~> 1.0",
       deps: deps(),
       description: "analytics_elixir",
+      dialyzer: [plt_add_deps: [:app_tree]],
       package: package()
     ]
   end
@@ -30,6 +31,7 @@ defmodule AnalyticsElixir.Mixfile do
   # Type `mix help deps` for more examples and options
   defp deps do
     [
+      {:dialyxir, "~> 1.0.0", only: [:dev], runtime: false},
       {:ex_doc, "~> 0.21", only: :dev, runtime: false},
       {:hackney, "~> 1.15"},
       {:jason, ">= 1.0.0"},

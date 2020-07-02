@@ -35,7 +35,7 @@ defmodule Segment.Http do
 
   """
   @type client :: Tesla.Client.t()
-  @type adapter :: Tesla.adapter()
+  @type adapter :: Tesla.Client.adapter()
 
   require Logger
   use Retry
@@ -77,13 +77,13 @@ defmodule Segment.Http do
   @doc """
     Send a list of Segment events as a batch
   """
-  @spec send(String.t(), list(Segment.segment_event())) :: :ok | :error
+  @spec send(client(), list(Segment.segment_event())) :: :ok | :error
   def send(client, events) when is_list(events), do: batch(client, events)
 
   @doc """
     Send a list of Segment events as a batch
   """
-  @spec send(String.t(), Segment.segment_event()) :: :ok | :error
+  @spec send(client(), Segment.segment_event()) :: :ok | :error
   def send(client, event) do
     case make_request(client, event.type, prepare_events(event), Segment.Config.retry_attempts()) do
       {:ok, %{status: status}} when status == 200 ->
@@ -112,7 +112,7 @@ defmodule Segment.Http do
     The `batch` function takes optional arguments for context and integrations which can
     be applied to the entire batch of events. See [Segment's docs](https://segment.com/docs/sources/server/http/#batch)
   """
-  @spec batch(String.t(), list(Segment.segment_event()), map(), map()) :: :ok | :error
+  @spec batch(client(), list(Segment.segment_event()), map() | nil, map() | nil) :: :ok | :error
   def batch(client, events, context \\ nil, integrations \\ nil) do
     data =
       %{batch: prepare_events(events)}
