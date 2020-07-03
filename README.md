@@ -149,6 +149,7 @@ The library has a number of configuration options you can use to overwrite defau
 - `config :segment, :retry_start` The time (in ms) to start the first retry. Default value is 100
 - `config :segment, :send_to_http` If set to `false`, the libray will override the Tesla Adapter implementation to only log segment calls to `debug` but not make any actual API calls. This can be useful if you want to switch off Segment for test or dev. Default value is true
 - `config :segment, :tesla, :adapter` This config option allows for overriding the HTTP Adapter for Tesla (which the library defaults to Hackney).This can be useful if you prefer something else, or want to mock the adapter for testing.
+- `config :segment, api_url: "https://self-hosted-segment-api.com/v1/"` The Segment-compatible API endpoint that will receive your events. Defaults to `https://api.segment.io/v1/`. This setting is only useful if you are using a Segment-compatible alternative API like [Rudderstack](https://rudderstack.com/).
 
 ## Usage in Phoenix
 
