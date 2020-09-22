@@ -5,7 +5,7 @@ analytics-elixir is a non-supported third-party client for [Segment](https://seg
 
 ## Install
 
-Add the following to deps section of your mix.exs: `{:segment, github: "stueccles/analytics-elixir"}`
+Add the following to deps section of your mix.exs: `{:segment, github: "FindHotel/analytics-elixir"}`
 
 and then `mix deps.get`
 
@@ -24,7 +24,7 @@ with all the data for the API (allowing Context and Integrations to be set)
 
 This is how I add to a Phoenix project (may not be your preferred way)
 
-1. Add the following to deps section of your mix.exs: `{:segment, github: "stueccles/analytics-elixir"}`
+1. Add the following to deps section of your mix.exs: `{:segment, github: "FindHotel/analytics-elixir"}`
    and then `mix deps.get`
 
 2. Add segment to applications list in the Phoenix project mix.exs
@@ -124,6 +124,20 @@ or the full way using a struct with all the possible options for the page call
                        }
   |> Segment.Analytics.page
 ```
+
+### Config as options
+
+You can also pass the __endpoint__ and __key__ as options to the
+`Segment.Analytics.call/2` along with the struct.
+```
+%Segment.Analytics.Track{ userId: "sdsds",
+                          event: "eventname",
+                          properties: %{property1: "", property2: ""}
+                        }
+  |> Segment.Analytics.call([key: "YOUR_SEGMENT_KEY", endpoint: "https://example.com/v1"])
+```
+
+With this approach the options take precedence over configurations stored in the Segment agent.
 
 ## Running tests
 

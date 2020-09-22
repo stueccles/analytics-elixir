@@ -9,7 +9,7 @@ defmodule Segment.Analytics.HttpTest do
 
   setup do
     bypass = Bypass.open()
-    Segment.start_link(@apikey, endpoint_url(bypass.port))
+    start_supervised!({Segment, [key: @apikey, endpoint: endpoint_url(bypass.port)]})
 
     {:ok, bypass: bypass}
   end
@@ -33,7 +33,38 @@ defmodule Segment.Analytics.HttpTest do
 
       Segment.Analytics.Http.post(@url, @body, [])
     end
+
+    test "when endpoint and key are given via options, " <>
+           "sends the request to the correct endpoint",
+         %{bypass: bypass} do
+      Bypass.expect(bypass, "POST", "/#{@url}", fn _conn ->
+        flunk("#{endpoint_url(bypass.port)} shouldn't be called")
+      end)
+
+      Bypass.pass(bypass)
+
+      another_bypass = Bypass.open()
+      another_apikey = "foobarbaz"
+      options = [key: another_apikey, endpoint: endpoint_url(another_bypass.port)]
+
+      Bypass.expect(another_bypass, "POST", "/#{@url}", fn conn ->
+        [
+          {"accept", "application/json"},
+          {"content-type", "application/json"},
+          {"x-api-key", another_apikey}
+        ]
+        |> Enum.each(fn {header, value} ->
+          assert [value] == Plug.Conn.get_req_header(conn, header)
+        end)
+
+        assert {:ok, @body, _conn} = Plug.Conn.read_body(conn)
+
+        Plug.Conn.resp(conn, 200, "")
+      end)
+
+      Segment.Analytics.Http.post(@url, @body, options)
+    end
   end
 
-  defp endpoint_url(port), do: "http://localhost:#{port}/"
+  def endpoint_url(port), do: "http://localhost:#{port}/"
 end

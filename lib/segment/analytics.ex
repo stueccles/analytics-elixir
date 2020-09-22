@@ -74,7 +74,7 @@ defmodule Segment.Analytics do
     |> call
   end
 
-  defp call(model) do
+  def call(model, options \\ []) do
     batch =
       model
       |> generate_message_id()
@@ -82,7 +82,7 @@ defmodule Segment.Analytics do
       |> wrap_in_batch()
       |> Poison.encode!()
 
-    Task.async(fn -> post_to_segment(batch) end)
+    Task.async(fn -> post_to_segment(batch, options) end)
   end
 
   # TODO: replace with an actual buffering
@@ -103,8 +103,8 @@ defmodule Segment.Analytics do
     put_in(model.messageId, UUID.uuid4())
   end
 
-  defp post_to_segment(body) do
-    Http.post("", body)
+  defp post_to_segment(body, options) do
+    Http.post("", body, options)
     |> log_result(body)
   end
 

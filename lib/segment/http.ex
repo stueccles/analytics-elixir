@@ -1,14 +1,21 @@
 defmodule Segment.Analytics.Http do
-  use HTTPoison.Base
-
-  def process_url(url) do
-    Segment.endpoint() <> url
+  def post(path, body, options) do
+    path
+    |> process_url(options)
+    |> HTTPoison.post(body, process_request_headers(options))
   end
 
-  def process_request_headers(headers) do
-    headers
-    |> Keyword.put(:"Content-Type", "application/json")
-    |> Keyword.put(:accept, "application/json")
-    |> Keyword.put(:"x-api-key", Segment.key())
+  def process_url(path, options),
+    do: get_config(options, :endpoint, &Segment.endpoint/0) <> path
+
+  def process_request_headers(options) do
+    [
+      {"Content-Type", "application/json"},
+      {"Accept", "application/json"},
+      {"x-api-key", get_config(options, :key, &Segment.key/0)}
+    ]
   end
+
+  def get_config(options, key, default_func),
+    do: Keyword.get(options, key) || default_func.()
 end
