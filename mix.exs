@@ -4,7 +4,7 @@ defmodule AnalyticsElixir.Mixfile do
   def project do
     [
       app: :segment,
-      version: "0.1.2",
+      version: "0.2.0",
       elixir: "~> 1.0",
       deps: deps(),
       name: "analytics_elixir",
@@ -43,7 +43,12 @@ defmodule AnalyticsElixir.Mixfile do
     # These are the default files included in the package
     [
       files: ["lib", "mix.exs", "README*", "LICENSE*"],
-      maintainers: ["Antonio Lorusso", "Fernando Hamasaki de Amorim"],
+      maintainers: [
+        "Antonio Lorusso",
+        "Felipe Vieira",
+        "Fernando Hamasaki de Amorim",
+        "Sergio Rodrigues"
+      ],
       licenses: ["MIT"],
       links: %{"GitHub" => "https://github.com/FindHotel/analytics-elixir"}
     ]

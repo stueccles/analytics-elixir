@@ -36,7 +36,7 @@ defmodule Segment.Analytics.AnalyticsTest do
                        "location" => nil,
                        "locale" => nil,
                        "library" => %{
-                         "version" => "0.1.2",
+                         "version" => "0.2.0",
                          "transport" => "http",
                          "name" => "analytics_elixir"
                        },
@@ -93,7 +93,7 @@ defmodule Segment.Analytics.AnalyticsTest do
                        "location" => nil,
                        "locale" => nil,
                        "library" => %{
-                         "version" => "0.1.2",
+                         "version" => "0.2.0",
                          "transport" => "http",
                          "name" => "analytics_elixir"
                        },
@@ -156,7 +156,7 @@ defmodule Segment.Analytics.AnalyticsTest do
                        "location" => nil,
                        "locale" => nil,
                        "library" => %{
-                         "version" => "0.1.2",
+                         "version" => "0.2.0",
                          "transport" => "http",
                          "name" => "analytics_elixir"
                        },
