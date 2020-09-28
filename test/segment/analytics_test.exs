@@ -22,28 +22,23 @@ defmodule Segment.Analytics.AnalyticsTest do
                      "type" => "track",
                      "timestamp" => nil,
                      "properties" => %{},
-                     "integrations" => nil,
                      "event" => "test1",
                      "context" => %{
-                       "userAgent" => nil,
-                       "traits" => nil,
-                       "timezone" => nil,
-                       "screen" => nil,
-                       "referrer" => nil,
-                       "page" => nil,
-                       "os" => nil,
-                       "network" => nil,
-                       "location" => nil,
-                       "locale" => nil,
-                       "library" => %{
-                         "version" => "0.2.0",
-                         "transport" => "http",
-                         "name" => "analytics_elixir"
-                       },
+                       "app" => nil,
                        "ip" => nil,
-                       "device" => nil,
-                       "campaign" => nil,
-                       "app" => nil
+                       "library" => %{
+                         "name" => "analytics_elixir",
+                         "transport" => "http",
+                         "version" => "0.2.0"
+                       },
+                       "location" => nil,
+                       "os" => nil,
+                       "page" => nil,
+                       "referrer" => nil,
+                       "screen" => nil,
+                       "timezone" => nil,
+                       "traits" => nil,
+                       "userAgent" => nil
                      },
                      "anonymousId" => nil
                    }
@@ -75,34 +70,29 @@ defmodule Segment.Analytics.AnalyticsTest do
         assert %{
                  "batch" => [
                    %{
-                     "userId" => nil,
-                     "type" => "track",
-                     "timestamp" => nil,
-                     "properties" => %{},
-                     "integrations" => nil,
-                     "event" => "test1",
+                     "anonymousId" => nil,
                      "context" => %{
-                       "userAgent" => nil,
-                       "traits" => nil,
-                       "timezone" => nil,
-                       "screen" => nil,
-                       "referrer" => nil,
-                       "page" => nil,
-                       "os" => nil,
-                       "network" => nil,
-                       "location" => nil,
-                       "locale" => nil,
-                       "library" => %{
-                         "version" => "0.2.0",
-                         "transport" => "http",
-                         "name" => "analytics_elixir"
-                       },
+                       "app" => nil,
                        "ip" => nil,
-                       "device" => nil,
-                       "campaign" => nil,
-                       "app" => nil
+                       "library" => %{
+                         "name" => "analytics_elixir",
+                         "transport" => "http",
+                         "version" => "0.2.0"
+                       },
+                       "location" => nil,
+                       "os" => nil,
+                       "page" => nil,
+                       "referrer" => nil,
+                       "screen" => nil,
+                       "timezone" => nil,
+                       "traits" => nil,
+                       "userAgent" => nil
                      },
-                     "anonymousId" => nil
+                     "event" => "test1",
+                     "properties" => %{},
+                     "timestamp" => nil,
+                     "type" => "track",
+                     "userId" => nil
                    }
                  ]
                } = Poison.decode!(received_body)
@@ -142,28 +132,23 @@ defmodule Segment.Analytics.AnalyticsTest do
                      "type" => "track",
                      "timestamp" => nil,
                      "properties" => %{},
-                     "integrations" => nil,
                      "event" => "test1",
                      "context" => %{
-                       "userAgent" => nil,
-                       "traits" => nil,
-                       "timezone" => nil,
-                       "screen" => nil,
-                       "referrer" => nil,
-                       "page" => nil,
-                       "os" => nil,
-                       "network" => nil,
-                       "location" => nil,
-                       "locale" => nil,
+                       "app" => nil,
+                       "ip" => nil,
                        "library" => %{
                          "version" => "0.2.0",
                          "transport" => "http",
                          "name" => "analytics_elixir"
                        },
-                       "ip" => nil,
-                       "device" => nil,
-                       "campaign" => nil,
-                       "app" => nil
+                       "location" => nil,
+                       "os" => nil,
+                       "page" => nil,
+                       "referrer" => nil,
+                       "screen" => nil,
+                       "timezone" => nil,
+                       "traits" => nil,
+                       "userAgent" => nil
                      },
                      "anonymousId" => nil
                    }

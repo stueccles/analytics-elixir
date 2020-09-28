@@ -1,15 +1,18 @@
 defmodule AnalyticsElixir.Mixfile do
   use Mix.Project
 
+  @version "0.2.0"
+  @source_url "https://github.com/FindHotel/analytics-elixir"
+
   def project do
     [
       app: :segment,
-      version: "0.2.0",
-      elixir: "~> 1.0",
       deps: deps(),
-      name: "analytics_elixir",
       description: "analytics_elixir",
-      package: package()
+      elixir: "~> 1.0",
+      name: "analytics_elixir",
+      package: package(),
+      version: @version
     ]
   end
 
@@ -33,24 +36,28 @@ defmodule AnalyticsElixir.Mixfile do
     [
       {:httpoison, "~> 1.4"},
       {:poison, "~> 4.0"},
+      {:uuid, "~> 1.1"},
+
+      # Dev
       {:ex_doc, "~> 0.19", only: :dev, runtime: false},
-      {:bypass, "~> 1.0", only: :test},
-      {:uuid, "~> 1.1"}
+
+      # Test
+      {:bypass, "~> 1.0", only: :test}
     ]
   end
 
   defp package do
     # These are the default files included in the package
     [
-      files: ["lib", "mix.exs", "README*", "LICENSE*"],
+      files: ["lib", "mix.exs", "README*", "LICENSE*", "CHANGELOG*"],
+      licenses: ["MIT"],
+      links: %{"GitHub" => @source_url},
       maintainers: [
         "Antonio Lorusso",
         "Felipe Vieira",
         "Fernando Hamasaki de Amorim",
         "Sergio Rodrigues"
-      ],
-      licenses: ["MIT"],
-      links: %{"GitHub" => "https://github.com/FindHotel/analytics-elixir"}
+      ]
     ]
   end
 end

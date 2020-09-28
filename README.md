@@ -1,4 +1,4 @@
-analytics-elixir
+analytics-elixir ![analytics-elixir](https://github.com/FindHotel/analytics-elixir/workflows/analytics-elixir/badge.svg?branch=master)
 ================
 
 analytics-elixir is a non-supported third-party client for [Segment](https://segment.com)
@@ -145,4 +145,13 @@ There are not many tests at the moment. But you can run a live test on your segm
 account by running.
 ```
 SEGMENT_KEY=yourkey mix test
+```
+
+## Release
+
+After merge a new feature/bug you can bump the version and push it to upstream:
+
+```sh
+make release
+git push origin master && git push origin --tags
 ```
