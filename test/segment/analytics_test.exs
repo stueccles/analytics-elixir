@@ -6,12 +6,13 @@ defmodule Segment.Analytics.AnalyticsTest do
   setup do
     bypass = Bypass.open()
     start_supervised({Segment, [key: "123", endpoint: endpoint_url(bypass.port)]})
+    version = Mix.Project.get().project[:version]
 
-    {:ok, bypass: bypass}
+    {:ok, bypass: bypass, version: version}
   end
 
   describe "track/1" do
-    test "sends a track event", %{bypass: bypass} do
+    test "sends a track event", %{bypass: bypass, version: version} do
       Bypass.expect(bypass, fn conn ->
         {:ok, received_body, _conn} = Plug.Conn.read_body(conn)
 
@@ -29,7 +30,7 @@ defmodule Segment.Analytics.AnalyticsTest do
                        "library" => %{
                          "name" => "analytics_elixir",
                          "transport" => "http",
-                         "version" => "0.2.0"
+                         "version" => ^version
                        },
                        "location" => nil,
                        "os" => nil,
@@ -63,7 +64,7 @@ defmodule Segment.Analytics.AnalyticsTest do
   end
 
   describe "call/2" do
-    test "sends an event", %{bypass: bypass} do
+    test "sends an event", %{bypass: bypass, version: version} do
       Bypass.expect(bypass, fn conn ->
         {:ok, received_body, _conn} = Plug.Conn.read_body(conn)
 
@@ -77,7 +78,7 @@ defmodule Segment.Analytics.AnalyticsTest do
                        "library" => %{
                          "name" => "analytics_elixir",
                          "transport" => "http",
-                         "version" => "0.2.0"
+                         "version" => ^version
                        },
                        "location" => nil,
                        "os" => nil,
@@ -113,7 +114,7 @@ defmodule Segment.Analytics.AnalyticsTest do
       Task.await(task)
     end
 
-    test "sends an event using endpoint and key from options", %{bypass: bypass} do
+    test "sends an event using endpoint and key from options", %{bypass: bypass, version: version} do
       Bypass.expect(bypass, fn _conn ->
         flunk("#{endpoint_url(bypass.port)} shouldn't be called")
       end)
@@ -137,7 +138,7 @@ defmodule Segment.Analytics.AnalyticsTest do
                        "app" => nil,
                        "ip" => nil,
                        "library" => %{
-                         "version" => "0.2.0",
+                         "version" => ^version,
                          "transport" => "http",
                          "name" => "analytics_elixir"
                        },
