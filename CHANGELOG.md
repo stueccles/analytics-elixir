@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Add version field to `Segment.Analytics.Track`, `Segment.Analytics.Identify`,
+`Segment.Analytics.Alias`, `Segment.Analytics.Page`, `Segment.Analytics.Screen`
+and `Segment.Analytics.Group`.
 
 ## [0.2.1] - 2020-09-28
 ### Removed

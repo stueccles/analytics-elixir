@@ -12,13 +12,14 @@ defmodule Segment.Analytics.Track do
   @method "track"
 
   defstruct [
-    :userId,
-    :event,
-    :properties,
-    :context,
-    :timestamp,
     :anonymousId,
+    :context,
+    :event,
     :messageId,
+    :properties,
+    :timestamp,
+    :userId,
+    :version,
     type: @method
   ]
 end
@@ -28,12 +29,13 @@ defmodule Segment.Analytics.Identify do
   @method "identify"
 
   defstruct [
-    :userId,
-    :traits,
-    :context,
-    :timestamp,
     :anonymousId,
+    :context,
     :messageId,
+    :timestamp,
+    :traits,
+    :userId,
+    :version,
     type: @method
   ]
 end
@@ -42,7 +44,7 @@ defmodule Segment.Analytics.Alias do
   @derive [Poison.Encoder]
   @method "alias"
 
-  defstruct [:userId, :previousId, :context, :timestamp, type: @method]
+  defstruct [:context, :previousId, :timestamp, :userId, :version, type: @method]
 end
 
 defmodule Segment.Analytics.Page do
@@ -50,13 +52,14 @@ defmodule Segment.Analytics.Page do
   @method "page"
 
   defstruct [
-    :userId,
+    :anonymousId,
+    :context,
+    :messageId,
     :name,
     :properties,
-    :context,
     :timestamp,
-    :anonymousId,
-    :messageId,
+    :userId,
+    :version,
     type: @method
   ]
 end
@@ -66,13 +69,14 @@ defmodule Segment.Analytics.Screen do
   @method "screen"
 
   defstruct [
-    :userId,
+    :anonymousId,
+    :context,
+    :messageId,
     :name,
     :properties,
-    :context,
     :timestamp,
-    :anonymousId,
-    :messageId,
+    :userId,
+    :version,
     type: @method
   ]
 end
@@ -82,13 +86,14 @@ defmodule Segment.Analytics.Group do
   @method "group"
 
   defstruct [
-    :userId,
-    :groupId,
-    :traits,
-    :context,
-    :timestamp,
     :anonymousId,
+    :context,
+    :groupId,
     :messageId,
+    :timestamp,
+    :traits,
+    :userId,
+    :version,
     type: @method
   ]
 end
