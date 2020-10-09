@@ -105,16 +105,24 @@ defmodule Segment.Analytics do
 
   defp post_to_segment(body, options) do
     Http.post("", body, options)
-    |> log_result(body)
+    |> log_and_return(body)
   end
 
   # log success responses
-  defp log_result({_, %{status_code: code}}, body) when code in 200..299 do
+  defp log_and_return({_, %{body: response_body, status_code: code}}, body)
+       when code in 200..299 do
     Logger.debug("[#{__MODULE__}] call success: #{code} with body: #{body}")
+    {:ok, response_body}
   end
 
   # log failed responses
-  defp log_result(error, body) do
+  defp log_and_return({_, %{body: response_body}} = error, body) do
     Logger.debug("[#{__MODULE__}] call failed: #{inspect(error)} with body: #{body}")
+    {:error, response_body}
+  end
+
+  defp log_and_return({_, %{reason: reason}} = error, body) do
+    Logger.debug("[#{__MODULE__}] call failed: #{inspect(error)} with body: #{body}")
+    {:error, Enum.join([~s({"reason":"), inspect(reason), ~s("})])}
   end
 end

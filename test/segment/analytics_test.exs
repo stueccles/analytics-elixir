@@ -8,170 +8,125 @@ defmodule Segment.Analytics.AnalyticsTest do
     start_supervised({Segment, [key: "123", endpoint: endpoint_url(bypass.port)]})
     version = Mix.Project.get().project[:version]
 
-    {:ok, bypass: bypass, version: version}
-  end
+    event = %Segment.Analytics.Track{
+      userId: nil,
+      event: "test1",
+      properties: %{},
+      context: %Segment.Analytics.Context{}
+    }
 
-  describe "track/1" do
-    test "sends a track event", %{bypass: bypass, version: version} do
-      Bypass.expect(bypass, fn conn ->
-        {:ok, received_body, _conn} = Plug.Conn.read_body(conn)
+    expected_request_body = %{
+      "batch" => [
+        %{
+          "anonymousId" => nil,
+          "context" => %{
+            "app" => nil,
+            "ip" => nil,
+            "library" => %{
+              "name" => "analytics_elixir",
+              "transport" => "http",
+              "version" => version
+            },
+            "location" => nil,
+            "os" => nil,
+            "page" => nil,
+            "referrer" => nil,
+            "screen" => nil,
+            "timezone" => nil,
+            "traits" => nil,
+            "userAgent" => nil
+          },
+          "event" => "test1",
+          "properties" => %{},
+          "timestamp" => nil,
+          "type" => "track",
+          "userId" => nil,
+          "version" => nil
+        }
+      ]
+    }
 
-        assert %{
-                 "batch" => [
-                   %{
-                     "userId" => nil,
-                     "type" => "track",
-                     "timestamp" => nil,
-                     "properties" => %{},
-                     "event" => "test1",
-                     "context" => %{
-                       "app" => nil,
-                       "ip" => nil,
-                       "library" => %{
-                         "name" => "analytics_elixir",
-                         "transport" => "http",
-                         "version" => ^version
-                       },
-                       "location" => nil,
-                       "os" => nil,
-                       "page" => nil,
-                       "referrer" => nil,
-                       "screen" => nil,
-                       "timezone" => nil,
-                       "traits" => nil,
-                       "userAgent" => nil
-                     },
-                     "anonymousId" => nil
-                   }
-                 ]
-               } = Poison.decode!(received_body)
+    expected_response = ~s({"another": {"json": ["response"]}})
 
-        # messageId and sentAt are not asserted
-
-        Plug.Conn.resp(conn, 200, "")
-      end)
-
-      event = %Segment.Analytics.Track{
-        userId: nil,
-        event: "test1",
-        properties: %{},
-        context: %Segment.Analytics.Context{}
-      }
-
-      task = Segment.Analytics.track(event)
-      Task.await(task)
-    end
+    {:ok,
+     bypass: bypass,
+     event: event,
+     expected_request_body: expected_request_body,
+     expected_response: expected_response}
   end
 
   describe "call/2" do
-    test "sends an event", %{bypass: bypass, version: version} do
+    test "sends an event, and returns the response", %{
+      bypass: bypass,
+      event: event,
+      expected_request_body: expected_request_body,
+      expected_response: expected_response
+    } do
       Bypass.expect(bypass, fn conn ->
         {:ok, received_body, _conn} = Plug.Conn.read_body(conn)
 
-        assert %{
-                 "batch" => [
-                   %{
-                     "anonymousId" => nil,
-                     "context" => %{
-                       "app" => nil,
-                       "ip" => nil,
-                       "library" => %{
-                         "name" => "analytics_elixir",
-                         "transport" => "http",
-                         "version" => ^version
-                       },
-                       "location" => nil,
-                       "os" => nil,
-                       "page" => nil,
-                       "referrer" => nil,
-                       "screen" => nil,
-                       "timezone" => nil,
-                       "traits" => nil,
-                       "userAgent" => nil
-                     },
-                     "event" => "test1",
-                     "properties" => %{},
-                     "timestamp" => nil,
-                     "type" => "track",
-                     "userId" => nil
-                   }
-                 ]
-               } = Poison.decode!(received_body)
-
         # messageId and sentAt are not asserted
+        %{"batch" => [received_event | _received_events]} =
+          received_body
+          |> Poison.decode!()
+          |> Map.delete("sentAt")
 
-        Plug.Conn.resp(conn, 200, "")
+        received_event = Map.delete(received_event, "messageId")
+
+        assert %{"batch" => [received_event]} == expected_request_body
+        Plug.Conn.resp(conn, 200, expected_response)
       end)
 
-      event = %Segment.Analytics.Track{
-        userId: nil,
-        event: "test1",
-        properties: %{},
-        context: %Segment.Analytics.Context{}
-      }
-
       task = Segment.Analytics.call(event)
-      Task.await(task)
+      assert {:ok, expected_response} == Task.await(task)
     end
+  end
 
-    test "sends an event using endpoint and key from options", %{bypass: bypass, version: version} do
+  describe "call/2 when another endpoint and key were given" do
+    setup %{bypass: bypass} do
       Bypass.expect(bypass, fn _conn ->
         flunk("#{endpoint_url(bypass.port)} shouldn't be called")
       end)
 
       Bypass.pass(bypass)
 
-      another_bypass = Bypass.open()
+      {:ok, bypass: Bypass.open()}
+    end
 
-      Bypass.expect(another_bypass, fn conn ->
+    test "sends an event using endpoint and key from options, and returns the response", %{
+      bypass: bypass,
+      event: event,
+      expected_request_body: expected_request_body,
+      expected_response: expected_response
+    } do
+      Bypass.expect(bypass, fn conn ->
         {:ok, received_body, _conn} = Plug.Conn.read_body(conn)
 
-        assert %{
-                 "batch" => [
-                   %{
-                     "userId" => nil,
-                     "type" => "track",
-                     "timestamp" => nil,
-                     "properties" => %{},
-                     "event" => "test1",
-                     "context" => %{
-                       "app" => nil,
-                       "ip" => nil,
-                       "library" => %{
-                         "version" => ^version,
-                         "transport" => "http",
-                         "name" => "analytics_elixir"
-                       },
-                       "location" => nil,
-                       "os" => nil,
-                       "page" => nil,
-                       "referrer" => nil,
-                       "screen" => nil,
-                       "timezone" => nil,
-                       "traits" => nil,
-                       "userAgent" => nil
-                     },
-                     "anonymousId" => nil
-                   }
-                 ]
-               } = Poison.decode!(received_body)
-
         # messageId and sentAt are not asserted
+        %{"batch" => [received_event | _received_events]} =
+          received_body
+          |> Poison.decode!()
+          |> Map.delete("sentAt")
 
-        Plug.Conn.resp(conn, 200, "")
+        received_event = Map.delete(received_event, "messageId")
+
+        assert %{"batch" => [received_event]} == expected_request_body
+        Plug.Conn.resp(conn, 200, expected_response)
       end)
 
-      event = %Segment.Analytics.Track{
-        userId: nil,
-        event: "test1",
-        properties: %{},
-        context: %Segment.Analytics.Context{}
-      }
-
-      options = [key: "anotherkey", endpoint: endpoint_url(another_bypass.port)]
+      options = [key: "anotherkey", endpoint: endpoint_url(bypass.port)]
 
       task = Segment.Analytics.call(event, options)
-      Task.await(task)
+      assert {:ok, expected_response} == Task.await(task)
+    end
+
+    test "when fail to reach the server returns error", %{event: event} do
+      expected_response = ~s({"reason":":nxdomain"})
+
+      options = [key: "invalidendpoint", endpoint: "http://invalidend.point"]
+
+      task = Segment.Analytics.call(event, options)
+      assert {:error, expected_response} == Task.await(task)
     end
   end
 
