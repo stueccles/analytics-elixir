@@ -40,7 +40,7 @@ defmodule Segment.Http do
   require Logger
   use Retry
 
-  @segment_api_url "https://api.segment.io/v1/"
+  @segment_api_url Application.get_env(:segment, :api_url, "https://api.segment.io/v1/")
 
   @doc """
     Create a Tesla client with the Segment Source Write API Key
