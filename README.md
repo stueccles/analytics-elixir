@@ -10,7 +10,7 @@ Add `segment` to your list of dependencies in mix.exs
 ```
 def deps do
   [
-    {:segment, "~> 0.2.3"}
+    {:segment, "~> 0.2.4"}
   ]
 end
 ```
