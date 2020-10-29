@@ -25,9 +25,9 @@ defmodule Segment.Http do
   * `config :segment, :retry_attempts` The number of times to retry sending against the segment API. Default value is 3
   * `config :segment, :retry_expiry` The maximum time (in ms) spent retrying. Default value is 10000 (10 seconds)
   * `config :segment, :retry_start` The time (in ms) to start the first retry. Default value is 100
-  * `config :segment, :send_to_http` If set to `false`, the libray will override the Tesla Adapter implementation to only log segment calls to `debug` but not make any actual API calls. This can be useful if you want to switch off Segment for test or dev. Default value is true
+  * `config :segment, :send_to_http` If set to `false`, the library will override the Tesla Adapter implementation to only log segment calls to `debug` but not make any actual API calls. This can be useful if you want to switch off Segment for test or dev. Default value is true
 
-  The retry uses a linear back-off strategy when retring the Segment API.
+  The retry uses a linear back-off strategy when retrying the Segment API.
 
   Additionally a different Tesla Adapter can be used if you want to use something other than Hackney.
 

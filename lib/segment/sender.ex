@@ -3,7 +3,7 @@ defmodule Segment.Analytics.Sender do
     The `Segment.Analytics.Sender` service implementation is an alternative to the default Batcher to send every event as it is called.
     The HTTP call is made with an async `Task` to not block the GenServer. This will not guarantee ordering.
 
-    The `Segment.Analytics.Batcher` should be preferred in production but this module will emulate the implementaiton of the original library if
+    The `Segment.Analytics.Batcher` should be preferred in production but this module will emulate the implementation of the original library if
     you need that or need events to be as real-time as possible.
   """
   use GenServer
@@ -31,7 +31,7 @@ defmodule Segment.Analytics.Sender do
   # client
   @doc """
     Make a call to Segment with an event. Should be of type `Track, Identify, Screen, Alias, Group or Page`.
-    This event will be sent immediately and asyncronously
+    This event will be sent immediately and asynchronously
   """
   @spec call(Segment.segment_event()) :: :ok
   def call(%{__struct__: mod} = event)
