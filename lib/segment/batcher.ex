@@ -91,6 +91,8 @@ defmodule Segment.Analytics.Batcher do
     {:noreply, {client, queue}}
   end
 
+  def handle_info({:ssl_closed, _msg}, state), do: {:no_reply, state}
+
   # Helpers
   defp schedule_batch_send do
     Process.send_after(self(), :process_batch, Segment.Config.batch_every_ms())
