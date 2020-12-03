@@ -1,11 +1,19 @@
-# analytics-elixir
+# Segment
 
-analytics-elixir is a non-official third-party client for [Segment](https://segment.com). Since version `2.0` it supports
+<!-- MDOC !-->
+
+[![hex.pm](https://img.shields.io/hexpm/v/segment.svg)](https://hex.pm/packages/segment)
+[![hexdocs.pm](https://img.shields.io/badge/hex-docs-lightgreen.svg)](https://hexdocs.pm/segment/)
+[![hex.pm](https://img.shields.io/hexpm/dt/segment.svg)](https://hex.pm/packages/segment)
+[![hex.pm](https://img.shields.io/hexpm/l/segment.svg)](https://hex.pm/packages/segment)
+[![github.com](https://img.shields.io/github/last-commit/stueccles/analytics-elixir.svg)](https://github.com/stueccles/analytics-elixir/commits/master)
+
+This is a non-official third-party client for [Segment](https://segment.com). Since version `2.0` it supports
 batch delivery of events and retries for the API.
 
 ## Installation
 
-Add `segment` to your list of dependencies in mix.exs
+Add `segment` to your list of dependencies in `mix.exs`.
 
 ```
 def deps do
@@ -14,10 +22,6 @@ def deps do
   ]
 end
 ```
-
-## Documentation
-
-Documentation can be be found at [https://hexdocs.pm/segment](https://hexdocs.pm/segment).
 
 ## Usage
 
@@ -45,11 +49,8 @@ Segment.Analytics.track(user_id, event, %{property1: "", property2: ""})
 or the full way using a struct with all the possible options for the track call
 
 ```elixir
-%Segment.Analytics.Track{ userId: "sdsds",
-                          event: "eventname",
-                          properties: %{property1: "", property2: ""}
-                        }
-  |> Segment.Analytics.track
+%Segment.Analytics.Track{userId: "sdsds", event: "eventname", properties: %{property1: "", property2: ""}}
+|> Segment.Analytics.track
 ```
 
 ### Identify
@@ -58,13 +59,11 @@ or the full way using a struct with all the possible options for the track call
 Segment.Analytics.identify(user_id, %{trait1: "", trait2: ""})
 ```
 
-or the full way using a struct with all the possible options for the identify call
+Or the full way using a struct with all the possible options for the identify call.
 
 ```elixir
-%Segment.Analytics.Identify{ userId: "sdsds",
-                             traits: %{trait1: "", trait2: ""}
-                           }
-  |> Segment.Analytics.identify
+%Segment.Analytics.Identify{userId: "sdsds", traits: %{trait1: "", trait2: ""}}
+|> Segment.Analytics.identify
 ```
 
 ### Screen
@@ -73,13 +72,11 @@ or the full way using a struct with all the possible options for the identify ca
 Segment.Analytics.screen(user_id, name)
 ```
 
-or the full way using a struct with all the possible options for the screen call
+Or the full way using a struct with all the possible options for the screen call.
 
 ```elixir
-%Segment.Analytics.Screen{ userId: "sdsds",
-                           name: "dssd"
-                         }
-  |> Segment.Analytics.screen
+%Segment.Analytics.Screen{userId: "sdsds", name: "dssd"}
+|> Segment.Analytics.screen
 ```
 
 ### Alias
@@ -88,13 +85,11 @@ or the full way using a struct with all the possible options for the screen call
 Segment.Analytics.alias(user_id, previous_id)
 ```
 
-or the full way using a struct with all the possible options for the alias call
+Or the full way using a struct with all the possible options for the alias call.
 
 ```elixir
-%Segment.Analytics.Alias{ userId: "sdsds",
-                          previousId: "dssd"
-                         }
-  |> Segment.Analytics.alias
+%Segment.Analytics.Alias{userId: "sdsds", previousId: "dssd"}
+|> Segment.Analytics.alias
 ```
 
 ### Group
@@ -103,13 +98,11 @@ or the full way using a struct with all the possible options for the alias call
 Segment.Analytics.group(user_id, group_id)
 ```
 
-or the full way using a struct with all the possible options for the group call
+Or the full way using a struct with all the possible options for the group call.
 
 ```elixir
-%Segment.Analytics.Group{ userId: "sdsds",
-                          groupId: "dssd"
-                         }
-  |> Segment.Analytics.group
+%Segment.Analytics.Group{userId: "sdsds", groupId: "dssd"}
+|> Segment.Analytics.group
 ```
 
 ### Page
@@ -118,13 +111,11 @@ or the full way using a struct with all the possible options for the group call
 Segment.Analytics.page(user_id, name)
 ```
 
-or the full way using a struct with all the possible options for the page call
+Or the full way using a struct with all the possible options for the page call.
 
 ```elixir
-%Segment.Analytics.Page{ userId: "sdsds",
-                         name:   "dssd"
-                       }
-  |> Segment.Analytics.page
+%Segment.Analytics.Page{userId: "sdsds", name: "dssd"}
+|> Segment.Analytics.page
 ```
 
 ### Using the Segment Context
@@ -133,7 +124,6 @@ If you want to set the Context manually you should create a `Segment.Analytics.C
 
 ```elixir
 context = Segment.Analytics.Context.new(%{active: false})
-
 Segment.Analytics.track(user_id, event, %{property1: "", property2: ""}, context)
 ```
 
@@ -141,13 +131,13 @@ Segment.Analytics.track(user_id, event, %{property1: "", property2: ""}, context
 
 The library has a number of configuration options you can use to overwrite default values and behaviours
 
-- `config :segment, :sender_impl` Allows selection of a sender implementation. At the moment this defaults to `Segment.Analytics.Batcher` which will send all events in batch. Change this value to `Segment.Analytics.Sender` to have all messages sent immediately (asyncronously)
+- `config :segment, :sender_impl` Allows selection of a sender implementation. At the moment this defaults to `Segment.Analytics.Batcher` which will send all events in batch. Change this value to `Segment.Analytics.Sender` to have all messages sent immediately (asynchronously)
 - `config :segment, :max_batch_size` The maximum batch size of messages that will be sent to Segment at one time. Default value is 100.
 - `config :segment, :batch_every_ms` The time (in ms) between every batch request. Default value is 2000 (2 seconds)
 - `config :segment, :retry_attempts` The number of times to retry sending against the segment API. Default value is 3
 - `config :segment, :retry_expiry` The maximum time (in ms) spent retrying. Default value is 10000 (10 seconds)
 - `config :segment, :retry_start` The time (in ms) to start the first retry. Default value is 100
-- `config :segment, :send_to_http` If set to `false`, the libray will override the Tesla Adapter implementation to only log segment calls to `debug` but not make any actual API calls. This can be useful if you want to switch off Segment for test or dev. Default value is true
+- `config :segment, :send_to_http` If set to `false`, the library will override the Tesla Adapter implementation to only log segment calls to `debug` but not make any actual API calls. This can be useful if you want to switch off Segment for test or dev. Default value is true
 - `config :segment, :tesla, :adapter` This config option allows for overriding the HTTP Adapter for Tesla (which the library defaults to Hackney).This can be useful if you prefer something else, or want to mock the adapter for testing.
 - `config :segment, api_url: "https://self-hosted-segment-api.com/v1/"` The Segment-compatible API endpoint that will receive your events. Defaults to `https://api.segment.io/v1/`. This setting is only useful if you are using a Segment-compatible alternative API like [Rudderstack](https://rudderstack.com/).
 
@@ -155,21 +145,21 @@ The library has a number of configuration options you can use to overwrite defau
 
 This is how I add to a Phoenix project (may not be your preferred way)
 
-1. Add the following to deps section of your mix.exs: `{:segment, "~> 0.2.0"}`
-   and then `mix deps.get`
-2. Add a config variable for your write_key (you may want to make this load from ENV)
-   ie.
+1.  Add the following to deps section of your mix.exs: `{:segment, "~> 0.2.0"}`
+    and then `mix deps.get`
+2.  Add a config variable for your write_key (you may want to make this load from ENV)
+    ie.
 
-```elixir
-config :segment,
-  write_key: "2iFFnRsCfi"
-```
+    ```elixir
+    config :segment,
+      write_key: "2iFFnRsCfi"
+    ```
 
-3. Start the Segment GenServer in the supervised children list. In `application.ex` add to the children list:
+3.  Start the Segment GenServer in the supervised children list. In `application.ex` add to the children list:
 
-```elixir
-{Segment, Application.get_env(:segment, :write_key)}
-```
+    ```elixir
+    {Segment, Application.get_env(:segment, :write_key)}
+    ```
 
 ## Running tests
 
