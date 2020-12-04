@@ -18,7 +18,7 @@ defmodule AnalyticsElixir.Mixfile do
   end
 
   def application do
-    [applications: [:hackney, :logger, :retry, :tesla, :jason]]
+    [applications: [:hackney, :logger, :retry, :tesla, :jason, :telemetry]]
   end
 
   defp deps do
@@ -29,6 +29,7 @@ defmodule AnalyticsElixir.Mixfile do
       {:jason, ">= 1.0.0"},
       {:mox, "~> 0.5", only: :test},
       {:retry, "~> 0.13"},
+      {:telemetry, "~> 0.4.2"},
       {:tesla, "~> 1.2"}
     ]
   end

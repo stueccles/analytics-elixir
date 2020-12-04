@@ -85,7 +85,22 @@ defmodule Segment.Http do
   """
   @spec send(client(), Segment.segment_event()) :: :ok | :error
   def send(client, event) do
-    case make_request(client, event.type, prepare_events(event), Segment.Config.retry_attempts()) do
+    :telemetry.span([:segment, :send], %{event: event}, fn ->
+      tesla_result =
+        make_request(client, event.type, prepare_events(event), Segment.Config.retry_attempts())
+
+      case process_send_post_result(tesla_result) do
+        :ok ->
+          {:ok, %{event: event, status: :ok, result: tesla_result}}
+
+        :error ->
+          {:error, %{event: event, status: :error, error: tesla_result, result: tesla_result}}
+      end
+    end)
+  end
+
+  defp process_send_post_result(tesla_result) do
+    case tesla_result do
       {:ok, %{status: status}} when status == 200 ->
         :ok
 
@@ -114,12 +129,26 @@ defmodule Segment.Http do
   """
   @spec batch(client(), list(Segment.segment_event()), map() | nil, map() | nil) :: :ok | :error
   def batch(client, events, context \\ nil, integrations \\ nil) do
-    data =
-      %{batch: prepare_events(events)}
-      |> add_if(:context, context)
-      |> add_if(:integrations, integrations)
+    :telemetry.span([:segment, :batch], %{events: events}, fn ->
+      data =
+        %{batch: prepare_events(events)}
+        |> add_if(:context, context)
+        |> add_if(:integrations, integrations)
 
-    case make_request(client, "batch", data, Segment.Config.retry_attempts()) do
+      tesla_result = make_request(client, "batch", data, Segment.Config.retry_attempts())
+
+      case process_batch_post_result(tesla_result, events) do
+        :ok ->
+          {:ok, %{events: events, status: :ok, result: tesla_result}}
+
+        :error ->
+          {:error, %{events: events, status: :error, error: tesla_result, result: tesla_result}}
+      end
+    end)
+  end
+
+  defp process_batch_post_result(tesla_result, events) do
+    case tesla_result do
       {:ok, %{status: status}} when status == 200 ->
         :ok
 
