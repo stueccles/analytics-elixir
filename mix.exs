@@ -2,7 +2,7 @@ defmodule AnalyticsElixir.Mixfile do
   use Mix.Project
 
   @source_url "https://github.com/stueccles/analytics-elixir"
-  @version "0.2.4"
+  @version "0.2.5"
 
   def project do
     [
@@ -39,7 +39,8 @@ defmodule AnalyticsElixir.Mixfile do
       files: ["lib", "mix.exs", "README*", "LICENSE*"],
       maintainers: ["Stuart Eccles"],
       licenses: ["MIT"],
-      links: %{"GitHub" => @source_url}]
+      links: %{"GitHub" => @source_url}
+    ]
   end
 
   defp docs do
