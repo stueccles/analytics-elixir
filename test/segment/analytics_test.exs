@@ -52,7 +52,8 @@ defmodule Segment.Analytics.AnalyticsTest do
      bypass: bypass,
      event: event,
      expected_request_body: expected_request_body,
-     expected_response: expected_response}
+     expected_response: expected_response,
+     version: version}
   end
 
   describe "call/2" do
@@ -78,6 +79,50 @@ defmodule Segment.Analytics.AnalyticsTest do
       end)
 
       task = Segment.Analytics.call(event)
+      assert {:ok, expected_response} == Task.await(task)
+    end
+
+    test "when `drop_nil_fields` option is set to `true`, sends an event without " <>
+           "null JSON attributes, and returns the response",
+         %{
+           bypass: bypass,
+           event: event,
+           expected_response: expected_response,
+           version: version
+         } do
+      expected_request_body = %{
+        "batch" => [
+          %{
+            "context" => %{
+              "library" => %{
+                "name" => "analytics_elixir",
+                "transport" => "http",
+                "version" => version
+              }
+            },
+            "event" => "test1",
+            "properties" => %{},
+            "type" => "track"
+          }
+        ]
+      }
+
+      Bypass.expect(bypass, fn conn ->
+        {:ok, received_body, _conn} = Plug.Conn.read_body(conn)
+
+        # messageId and sentAt are not asserted
+        %{"batch" => [received_event | _received_events]} =
+          received_body
+          |> Poison.decode!()
+          |> Map.delete("sentAt")
+
+        received_event = Map.delete(received_event, "messageId")
+
+        assert %{"batch" => [received_event]} == expected_request_body
+        Plug.Conn.resp(conn, 200, expected_response)
+      end)
+
+      task = Segment.Analytics.call(event, drop_nil_fields: true)
       assert {:ok, expected_response} == Task.await(task)
     end
   end

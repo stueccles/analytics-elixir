@@ -139,6 +139,11 @@ You can also pass the __endpoint__ and __key__ as options to the
 
 With this approach the options take precedence over configurations stored in the Segment agent.
 
+### Filtering null JSON attributes from request body
+
+You can avoid sending `null` JSON attributes to the configured Segment API endpoint by passing
+`drop_nil_fields: true` to the `Segment.Analytics.call/2` function.
+
 ## Running tests
 
 There are not many tests at the moment. But you can run a live test on your segment

@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Add `drop_nil_fields` options to filter `null` JSON attributes from the request
+body sent to the API endpoint.
 
 ## [1.0.0] - 2020-10-09
 ### Changed

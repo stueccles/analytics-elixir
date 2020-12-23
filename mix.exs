@@ -10,6 +10,7 @@ defmodule AnalyticsElixir.Mixfile do
       deps: deps(),
       description: "analytics_elixir",
       elixir: "~> 1.0",
+      elixirc_paths: elixirc_paths(Mix.env()),
       name: "analytics_elixir",
       package: package(),
       version: @version
@@ -45,6 +46,9 @@ defmodule AnalyticsElixir.Mixfile do
       {:bypass, "~> 1.0", only: :test}
     ]
   end
+
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(_environment), do: ["lib"]
 
   defp package do
     # These are the default files included in the package
