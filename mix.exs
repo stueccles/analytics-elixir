@@ -9,7 +9,7 @@ defmodule AnalyticsElixir.Mixfile do
       app: :segment,
       deps: deps(),
       description: "analytics_elixir",
-      elixir: "~> 1.0",
+      elixir: "~> 1.12",
       elixirc_paths: elixirc_paths(Mix.env()),
       name: "analytics_elixir",
       package: package(),
@@ -21,7 +21,7 @@ defmodule AnalyticsElixir.Mixfile do
   #
   # Type `mix help compile.app` for more information
   def application do
-    [applications: [:httpoison, :logger, :poison, :uuid]]
+    []
   end
 
   # Dependencies can be Hex packages:
