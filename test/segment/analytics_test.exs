@@ -2,6 +2,7 @@ defmodule Segment.Analytics.AnalyticsTest do
   # not used in async mode because of Bypass
   # test fail randomly
   use ExUnit.Case
+  import ExUnit.CaptureLog
 
   setup do
     bypass = Bypass.open()
@@ -46,7 +47,7 @@ defmodule Segment.Analytics.AnalyticsTest do
       ]
     }
 
-    expected_response = ~s({"another": {"json": ["response"]}})
+    expected_response = ~s({"another": {"json": ["response"]}}, "address":{"city": "Amsterdam"}})
 
     {:ok,
      bypass: bypass,
@@ -78,8 +79,15 @@ defmodule Segment.Analytics.AnalyticsTest do
         Plug.Conn.resp(conn, 200, expected_response)
       end)
 
-      task = Segment.Analytics.call(event)
-      assert {:ok, expected_response} == Task.await(task)
+      log =
+        capture_log(fn ->
+          task = Segment.Analytics.call(event)
+          assert {:ok, expected_response} == Task.await(task)
+        end)
+
+      assert log =~
+               ~s([Segment.Analytics] call success: 200 with body: ) <>
+                 ~s({"another": {"json": ["response"]}}, "address":{}})
     end
 
     test "when `drop_nil_fields` option is set to `true`, sends an event without " <>
@@ -170,8 +178,14 @@ defmodule Segment.Analytics.AnalyticsTest do
 
       options = [key: "invalidendpoint", endpoint: "http://invalidend.point"]
 
-      task = Segment.Analytics.call(event, options)
-      assert {:error, expected_response} == Task.await(task)
+      log =
+        capture_log(fn ->
+          task = Segment.Analytics.call(event, options)
+          assert {:error, expected_response} == Task.await(task)
+        end)
+
+      assert log =~
+               ~s(call failed: %HTTPoison.Error{id: nil, reason: :nxdomain} with reason: :nxdomain)
     end
   end
 

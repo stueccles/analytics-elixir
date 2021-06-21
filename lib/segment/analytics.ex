@@ -1,7 +1,7 @@
 defmodule Segment.Analytics do
-  require Logger
+  alias HTTPoison.{Error, Response}
 
-  alias Segment.Analytics.{Batch, Context, Http}
+  alias Segment.Analytics.{Batch, Context, Http, ResponseFormatter}
   alias Segment.Encoder
 
   def track(t = %Segment.Analytics.Track{}), do: call(t)
@@ -102,24 +102,19 @@ defmodule Segment.Analytics do
 
   defp post_to_segment(body, options) do
     Http.post("", body, options)
-    |> log_and_return(body)
+    |> ResponseFormatter.build(prefix: __MODULE__)
+    |> tap(&MetaLogger.log(:debug, &1))
+    |> handle_response()
   end
 
-  # log success responses
-  defp log_and_return({_, %{body: response_body, status_code: code}}, body)
-       when code in 200..299 do
-    Logger.debug("[#{__MODULE__}] call success: #{code} with body: #{body}")
-    {:ok, response_body}
+  defp handle_response(%{payload: %{data: %Response{body: body, status_code: status_code}}})
+       when status_code in 200..299 do
+    {:ok, body}
   end
 
-  # log failed responses
-  defp log_and_return({_, %{body: response_body}} = error, body) do
-    Logger.debug("[#{__MODULE__}] call failed: #{inspect(error)} with body: #{body}")
-    {:error, response_body}
-  end
+  defp handle_response(%{payload: %{data: %Response{body: body}}}), do: {:error, body}
 
-  defp log_and_return({_, %{reason: reason}} = error, body) do
-    Logger.debug("[#{__MODULE__}] call failed: #{inspect(error)} with body: #{body}")
+  defp handle_response(%{payload: %{data: %Error{reason: reason}}}) do
     {:error, Enum.join([~s({"reason":"), inspect(reason), ~s("})])}
   end
 end

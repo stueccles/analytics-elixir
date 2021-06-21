@@ -1,7 +1,7 @@
 defmodule AnalyticsElixir.Mixfile do
   use Mix.Project
 
-  @version "1.0.0"
+  @version "1.1.0"
   @source_url "https://github.com/FindHotel/analytics-elixir"
 
   def project do
@@ -9,7 +9,7 @@ defmodule AnalyticsElixir.Mixfile do
       app: :segment,
       deps: deps(),
       description: "analytics_elixir",
-      elixir: "~> 1.0",
+      elixir: "~> 1.12",
       elixirc_paths: elixirc_paths(Mix.env()),
       name: "analytics_elixir",
       package: package(),
@@ -21,7 +21,7 @@ defmodule AnalyticsElixir.Mixfile do
   #
   # Type `mix help compile.app` for more information
   def application do
-    [applications: [:httpoison, :logger, :poison, :uuid]]
+    []
   end
 
   # Dependencies can be Hex packages:
@@ -38,6 +38,8 @@ defmodule AnalyticsElixir.Mixfile do
       {:httpoison, "~> 1.4"},
       {:poison, "~> 4.0"},
       {:uuid, "~> 1.1"},
+      {:meta_logger, "~> 1.4"},
+      {:typed_struct, "~> 0.2"},
 
       # Dev
       {:ex_doc, "~> 0.19", only: :dev, runtime: false},

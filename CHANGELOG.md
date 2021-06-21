@@ -7,6 +7,10 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 ### Added
+- Use `MetaLogger.Formatter` for formatting logs and masking sensitive fields.
+
+## [1.1.0] - 2020-12-23
+### Added
 - Add `drop_nil_fields` options to filter `null` JSON attributes from the request
 body sent to the API endpoint.
 
@@ -34,7 +38,8 @@ and `Segment.Analytics.Group`.
 ### Added
 - First release.
 
-[Unreleased]: https://github.com/FindHotel/analytics-elixir/compare/1.0.0...master
+[Unreleased]: https://github.com/FindHotel/analytics-elixir/compare/1.1.0...master
+[1.1.0]: https://github.com/FindHotel/analytics-elixir/compare/1.0.0...1.1.0
 [1.0.0]: https://github.com/FindHotel/analytics-elixir/compare/0.2.2...1.0.0
 [0.2.2]: https://github.com/FindHotel/analytics-elixir/compare/0.2.1...0.2.2
 [0.2.1]: https://github.com/FindHotel/analytics-elixir/compare/0.2.0...0.2.1
