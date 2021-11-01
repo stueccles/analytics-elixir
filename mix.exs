@@ -29,7 +29,7 @@ defmodule AnalyticsElixir.Mixfile do
       {:jason, ">= 1.0.0"},
       {:mox, "~> 0.5", only: :test},
       {:retry, "~> 0.13"},
-      {:telemetry, "~> 0.4.2"},
+      {:telemetry, "~> 0.4.2 or ~> 1.0"},
       {:tesla, "~> 1.2"}
     ]
   end
