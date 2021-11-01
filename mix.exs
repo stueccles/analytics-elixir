@@ -2,7 +2,7 @@ defmodule AnalyticsElixir.Mixfile do
   use Mix.Project
 
   @source_url "https://github.com/stueccles/analytics-elixir"
-  @version "0.2.5"
+  @version "0.2.6"
 
   def project do
     [
@@ -24,7 +24,7 @@ defmodule AnalyticsElixir.Mixfile do
   defp deps do
     [
       {:dialyxir, "~> 1.0.0", only: [:dev], runtime: false},
-      {:ex_doc, "~> 0.21", only: :dev, runtime: false},
+      {:ex_doc, "~> 0.24", only: :dev, runtime: false},
       {:hackney, "~> 1.15"},
       {:jason, ">= 1.0.0"},
       {:mox, "~> 0.5", only: :test},

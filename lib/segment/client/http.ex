@@ -80,9 +80,6 @@ defmodule Segment.Http do
   @spec send(client(), list(Segment.segment_event())) :: :ok | :error
   def send(client, events) when is_list(events), do: batch(client, events)
 
-  @doc """
-    Send a list of Segment events as a batch
-  """
   @spec send(client(), Segment.segment_event()) :: :ok | :error
   def send(client, event) do
     :telemetry.span([:segment, :send], %{event: event}, fn ->
@@ -161,9 +158,7 @@ defmodule Segment.Http do
 
       {:error, err} ->
         Logger.error(
-          "[Segment] Batch call of #{length(events)} events failed after #{
-            Segment.Config.retry_attempts()
-          } retries. #{inspect(err)}"
+          "[Segment] Batch call of #{length(events)} events failed after #{Segment.Config.retry_attempts()} retries. #{inspect(err)}"
         )
 
         :error
