@@ -4,6 +4,7 @@
 
 [![hex.pm](https://img.shields.io/hexpm/v/segment.svg)](https://hex.pm/packages/segment)
 [![hexdocs.pm](https://img.shields.io/badge/hex-docs-lightgreen.svg)](https://hexdocs.pm/segment/)
+[![CI](https://github.com/stueccles/analytics-elixir/workflows/CI/badge.svg?branch=main)](https://github.com/stueccles/analytics-elixir/actions?query=branch%3Amain)
 [![hex.pm](https://img.shields.io/hexpm/dt/segment.svg)](https://hex.pm/packages/segment)
 [![hex.pm](https://img.shields.io/hexpm/l/segment.svg)](https://hex.pm/packages/segment)
 [![github.com](https://img.shields.io/github/last-commit/stueccles/analytics-elixir.svg)](https://github.com/stueccles/analytics-elixir/commits/master)
