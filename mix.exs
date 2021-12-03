@@ -8,7 +8,7 @@ defmodule AnalyticsElixir.Mixfile do
     [
       app: :segment,
       version: @version,
-      elixir: "~> 1.0",
+      elixir: "~> 1.7",
       deps: deps(),
       description: "analytics_elixir",
       dialyzer: [plt_add_deps: [:app_tree]],
