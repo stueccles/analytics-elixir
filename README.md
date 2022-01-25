@@ -15,7 +15,7 @@ batch delivery of events and retries for the API.
 
 Add `segment` to your list of dependencies in `mix.exs`.
 
-```
+```elixir
 def deps do
   [
     {:segment, "~> 0.2.6"}
