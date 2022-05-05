@@ -1,6 +1,10 @@
 defmodule Segment.Config do
   @moduledoc false
 
+  def api_url do
+    Application.get_env(:segment, :api_url, "https://api.segment.io/v1/")
+  end
+
   def service do
     Application.get_env(:segment, :sender_impl, Segment.Analytics.Batcher)
   end
