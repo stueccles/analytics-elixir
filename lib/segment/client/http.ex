@@ -40,8 +40,6 @@ defmodule Segment.Http do
   require Logger
   use Retry
 
-  @segment_api_url Application.get_env(:segment, :api_url, "https://api.segment.io/v1/")
-
   @doc """
     Create a Tesla client with the Segment Source Write API Key
   """
@@ -66,7 +64,7 @@ defmodule Segment.Http do
   @spec client(String.t(), adapter()) :: client()
   def client(api_key, adapter) do
     middleware = [
-      {Tesla.Middleware.BaseUrl, @segment_api_url},
+      {Tesla.Middleware.BaseUrl, Segment.Config.api_url()},
       Tesla.Middleware.JSON,
       {Tesla.Middleware.BasicAuth, %{username: api_key, password: ""}}
     ]
