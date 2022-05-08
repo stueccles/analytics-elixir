@@ -2,7 +2,7 @@ defmodule AnalyticsElixir.Mixfile do
   use Mix.Project
 
   @source_url "https://github.com/stueccles/analytics-elixir"
-  @version "0.2.6"
+  @version "0.2.7"
 
   def project do
     [
