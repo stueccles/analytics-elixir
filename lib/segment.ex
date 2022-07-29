@@ -12,14 +12,21 @@ defmodule Segment do
           | Segment.Analytics.Group.t()
           | Segment.Analytics.Page.t()
 
+  def start_link(opts \\ [])
+
   @doc """
   Start the configured GenServer for handling Segment events with the Segment HTTP Source API Write Key
 
   By default if nothing is configured it will start `Segment.Analytics.Batcher`
   """
   @spec start_link(String.t()) :: GenServer.on_start()
-  def start_link(api_key) do
+  def start_link(api_key) when is_binary(api_key) do
     Segment.Config.service().start_link(api_key)
+  end
+
+  @spec start_link(Segment.Analytics.Batcher.options()) :: GenServer.on_start()
+  def start_link(opts) when is_list(opts) do
+    Segment.Config.service().start_link(opts)
   end
 
   @doc """

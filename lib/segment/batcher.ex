@@ -22,13 +22,39 @@ defmodule Segment.Analytics.Batcher do
   use GenServer
   alias Segment.Analytics.{Track, Identify, Screen, Alias, Group, Page}
 
+  @type option :: {:name, Atom.t} | {:name, String.t} | {:api_key, String.t} | {:adapter, Segment.Http.adapter()}
+  @type options :: [option]
+
   @doc """
-    Start the `Segment.Analytics.Batcher` GenServer with an Segment HTTP Source API Write Key
+    Start the `Segment.Analytics.Batcher` GenServer with a keyword list supporting the following options:
+     - `:api_key` - Segment write key (requried)
+     - `:name` - Atom or String, defaults to #{__MODULE__} (optional)
+     - `:adapater` - Tesla client adapter (optional)
+
+    Alternatively, the `Segment.Analytics.Batcher` GenServer can also be started by supplying on the Segment HTTP Source API Write Key
   """
+  def start_link(opts \\ [name: __MODULE__])
+
+
   @spec start_link(String.t()) :: GenServer.on_start()
-  def start_link(api_key) do
+  def start_link(api_key) when is_binary(api_key) do
     client = Segment.Http.client(api_key)
     GenServer.start_link(__MODULE__, {client, :queue.new()}, name: __MODULE__)
+  end
+
+  @spec start_link(options()) :: GenServer.on_start()
+  def start_link(opts) when is_list(opts) do
+    name = opts[:name]
+    adapter = opts[:adapter]
+
+    client =
+      if adapter do
+        Segment.Http.client(opts[:api_key], adapter)
+      else
+        Segment.Http.client(opts[:api_key])
+      end
+
+      GenServer.start_link(__MODULE__, {client, :queue.new()}, name: name)
   end
 
   @doc """

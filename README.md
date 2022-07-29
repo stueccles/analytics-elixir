@@ -31,6 +31,19 @@ Start the Segment agent with your write_key from Segment for a HTTP API Server S
 Segment.start_link("YOUR_WRITE_KEY")
 ```
 
+Alternatively, a named segment agent can be started using a keyword list:
+
+```elixir
+# Not supplying the name will default to the module name
+opts = [name: MySegmentAgent, api_key: "YOUR_WRITE_KEY"]
+Segment.start_link(opts)
+```
+
+The following options are currently supported:
+ - `:api_key` (required)
+ - `:adapter` (optional)
+ - `:name`    (optional)
+
 There are then two ways to call the different methods on the API.
 A basic way through `Segment.Analytics` functions with either the full event Struct
 or some helper methods (also allowing Context and Integrations to be set manually).
