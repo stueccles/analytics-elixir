@@ -23,14 +23,14 @@ defmodule AnalyticsElixir.Mixfile do
 
   defp deps do
     [
-      {:dialyxir, "~> 1.0.0", only: [:dev], runtime: false},
-      {:ex_doc, "~> 0.24", only: :dev, runtime: false},
-      {:hackney, "~> 1.15"},
+      {:dialyxir, ">= 1.0.0", only: [:dev], runtime: false},
+      {:ex_doc, "~> 0.30", only: :dev, runtime: false},
+      {:hackney, ">= 1.20.0"},
       {:jason, ">= 1.0.0"},
-      {:mox, "~> 0.5", only: :test},
-      {:retry, "~> 0.13"},
+      {:mox, ">= 1.0.0", only: :test},
+      {:retry, "~> 0.18"},
       {:telemetry, "~> 0.4.2 or ~> 1.0"},
-      {:tesla, "~> 1.2"}
+      {:tesla, "~> 1.8"}
     ]
   end
 
